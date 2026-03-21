@@ -24,7 +24,5 @@ export const Container = styled.section`
     linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)),
     url(${Background});
   background-size: cover;
-  height: 500px;
+  min-height: 100vh;
 `;
-
-export const Content = styled.div``;
