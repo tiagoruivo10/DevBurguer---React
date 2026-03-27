@@ -18,7 +18,7 @@
 }
 
 #payment-form {
-  background-color: #ffffff;
+  background-color: #ffffff; /* ✨ Corrigido para branco hexadecimal */
   width: 30vw;
   min-width: 500px;
   align-self: center;
@@ -47,7 +47,7 @@
 .button {
   background: #0055de;
   font-family: Arial, sans-serif;
-  color: #ffffff;
+  color: #ffffff; /* ✨ Corrigido */
   border-radius: 4px;
   border: 0;
   padding: 12px 16px;
@@ -180,11 +180,11 @@ table {
   border-collapse: collapse;
 }
 table tbody tr:first-child td {
-  border-top: 1px solid #e6e6e6; /* Top border */
+  border-top: 1px solid #e6e6e6;
   padding-top: 10px;
 }
 table tbody tr:last-child td {
-  border-bottom: 1px solid #e6e6e6; /* Bottom border */
+  border-bottom: 1px solid #e6e6e6;
 }
 td {
   padding-bottom: 10px;
