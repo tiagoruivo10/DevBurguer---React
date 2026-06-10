@@ -134,106 +134,29 @@ src/
 
 ---
 
-# 📂 Estrutura das Principais Áreas
+## 📂 Estrutura das Principais Áreas
 
-## Components
-
-Contém componentes reutilizáveis utilizados em toda a aplicação.
-
-Exemplos:
-
-* Buttons
-* Inputs
-* Cards
-* Headers
-* Product Cards
-* Select Components
+| Container (Página) | Perfil de Acesso | Descrição Funcional |
+| :--- | :--- | :--- |
+| `Home` & `Menu` | Cliente | Apresentação inicial da hamburgueria e exibição do cardápio completo. |
+| `Cart` & `Checkout` | Cliente | Carrinho de compras dinâmico e revisão para finalização do pedido. |
+| `Complete Payment` | Cliente | Tela de sucesso e confirmação do pagamento. |
+| `Login` & `Register` | Público | Autenticação de usuários e registro de novos clientes. |
+| `Products` | Administrador | Listagem, cadastro (`New`) e edição (`Edit`) de itens do cardápio. |
+| `Orders` | Administrador | Visualização e atualização de status das comandas em andamento. |
 
 ---
 
-## Containers
+## 🛒 Fluxo de Compra Integrado
 
-Representam as páginas principais da aplicação.
+O sistema segue rigorosamente o fluxo de plataformas reais de e-commerce e delivery:
 
-### Home
-
-Página inicial da hamburgueria.
-
-### Menu
-
-Exibição do cardápio completo.
-
-### Cart
-
-Carrinho de compras.
-
-### Checkout
-
-Finalização do pedido.
-
-### Complete Payment
-
-Confirmação do pagamento.
-
-### Login
-
-Autenticação de usuários.
-
-### Register
-
-Cadastro de novos usuários.
-
----
-
-## Administração
-
-### Products
-
-Gerenciamento dos produtos cadastrados.
-
-### New Product
-
-Cadastro de novos itens.
-
-### Edit Product
-
-Atualização de produtos existentes.
-
-### Orders
-
-Gerenciamento dos pedidos realizados.
-
----
-
-# 🛒 Fluxo de Compra
-
-O sistema segue um fluxo semelhante ao utilizado por plataformas reais de delivery.
-
-### 1. Navegação
-
-O usuário acessa o cardápio.
-
-### 2. Seleção
-
-Produtos são adicionados ao carrinho.
-
-### 3. Revisão
-
-O pedido é revisado na tela do carrinho.
-
-### 4. Checkout
-
-Os dados do pedido são enviados para a API.
-
-### 5. Pagamento
-
-O Stripe processa a transação.
-
-### 6. Confirmação
-
-O pedido é finalizado e registrado no sistema.
-
----
+1. **Navegação:** O usuário acessa a plataforma e explora o cardápio.
+2. **Seleção:** Produtos são escolhidos e adicionados ao carrinho.
+3. **Revisão:** O pedido e o cálculo financeiro são validados na tela do carrinho.
+4. **Checkout:** Os dados de entrega e pedido são processados.
+5. **Pagamento:** O Stripe processa e valida a transação online de forma segura com cartão de crédito (Payment Intent).
+6. **Confirmação:** O pedido é finalizado, registrado no sistema e notificado na tela.
 
 # 💳 Integração com Stripe
 
