@@ -248,6 +248,7 @@ O frontend consome os serviços disponibilizados pela DevBurger API.
 Siga os passos abaixo para configurar, instalar as dependências e executar o projeto localmente.
 
 ### 1. Clonar e Instalar
+
 ```bash
 # Clonar o repositório
 git clone URL_DO_REPOSITORIO
@@ -257,7 +258,6 @@ cd devburguer-interface
 
 # Instalar as dependências do projeto
 npm install
-# ou caso prefira utilizar o yarn: yarn install
 
 # 🔐 Variáveis de Ambiente
 
