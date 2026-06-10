@@ -260,25 +260,18 @@ cd devburguer-interface
 npm install
 ```
 
-# 🔐 Variáveis de Ambiente
+### 2. Variáveis de Ambiente
 
+Crie um arquivo `.env` na raiz do projeto e configure a URL da API e a chave do Stripe:
+
+```env
 VITE_API_URL=http://localhost:3001
 VITE_STRIPE_PUBLIC_KEY=sua_chave_publica_do_stripe_aqui
-
----
-
-# ▶️ Executando o Projeto
-
-Modo desenvolvimento:
-
-```bash
-npm run dev
 ```
 
----
+### 3. Inicialização e Build
 
-# 📦 Gerando Build de Produção
-
+```bash
 # Iniciar o servidor em modo de desenvolvimento
 npm run dev
 
@@ -287,8 +280,7 @@ npm run build
 
 # Visualizar o build de produção localmente
 npm run preview
-
----
+```
 
 # 🎯 Objetivos do Projeto
 
