@@ -249,7 +249,7 @@ Siga os passos abaixo para configurar, instalar as dependências e executar o pr
 
 ### 1. Clonar e Instalar
 
-```bash
+``bash
 # Clonar o repositório
 git clone URL_DO_REPOSITORIO
 
@@ -261,19 +261,8 @@ npm install
 
 # 🔐 Variáveis de Ambiente
 
-Crie um arquivo:
-
-```env
-.env
-```
-
-Exemplo:
-
-```env
 VITE_API_URL=http://localhost:3001
-
-VITE_STRIPE_PUBLIC_KEY=
-```
+VITE_STRIPE_PUBLIC_KEY=sua_chave_publica_do_stripe_aqui
 
 ---
 
@@ -289,15 +278,14 @@ npm run dev
 
 # 📦 Gerando Build de Produção
 
-```bash
+# Iniciar o servidor em modo de desenvolvimento
+npm run dev
+
+# Gerar a versão otimizada para produção (Build)
 npm run build
-```
 
-Visualizar build localmente:
-
-```bash
+# Visualizar o build de produção localmente
 npm run preview
-```
 
 ---
 
