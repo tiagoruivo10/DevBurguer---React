@@ -249,7 +249,7 @@ Siga os passos abaixo para configurar, instalar as dependências e executar o pr
 
 ### 1. Clonar e Instalar
 
-``bash
+```bash
 # Clonar o repositório
 git clone URL_DO_REPOSITORIO
 
@@ -258,6 +258,7 @@ cd devburguer-interface
 
 # Instalar as dependências do projeto
 npm install
+```
 
 # 🔐 Variáveis de Ambiente
 
