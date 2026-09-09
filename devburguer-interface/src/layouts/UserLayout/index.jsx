@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router-dom';
 
-import { Footer, Header } from '../../components';
+import { Footer, Header, WhatsAppButton } from '../../components';
 
 export function UserLayout() {
   return (
@@ -8,6 +8,8 @@ export function UserLayout() {
       <Header />
       <Outlet />
       <Footer />
+      <WhatsAppButton />
     </>
   );
 }
+

@@ -49,6 +49,7 @@ export function CheckoutForm() {
             id: product.id,
             quantity: product.quantity,
             price: product.price,
+            observation: product.observation || '',
           };
         });
 

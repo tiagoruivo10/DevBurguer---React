@@ -1,71 +1,104 @@
 import { Link } from 'react-router-dom';
-
 import styled from 'styled-components';
 
-export const Container = styled.div`
+export const Container = styled.section`
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto 48px;
+  padding: 0 24px;
+
   .carousel-item {
-    padding-right: 40px;
+    padding: 12px;
+  }
+
+  .react-multiple-carousel__arrow {
+    background-color: rgba(30, 41, 59, 0.85);
+    backdrop-filter: blur(8px);
+    border: 1px solid ${(props) => props.theme.darkGray};
+    min-width: 44px;
+    min-height: 44px;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background-color: ${(props) => props.theme.orange};
+      border-color: ${(props) => props.theme.orange};
+      box-shadow: 0 0 15px rgba(255, 107, 0, 0.5);
+    }
   }
 
   .react-multiple-carousel__arrow--left {
-    left: 15px;
-    top: 10px;
+    left: -10px;
   }
 
   .react-multiple-carousel__arrow--right {
-    top: 10px;
+    right: -10px;
   }
-
-  padding-left: 40px;
 `;
 
 export const Title = styled.h2`
-  font-size: 32px;
+  font-size: 28px;
   font-weight: 800;
-  color: ${(props) => props.theme.purple};
-  padding-bottom: 12px;
-  position: relative;
-  text-align: center;
-  margin-bottom: 40px;
-  margin-top: 20px;
+  color: ${(props) => props.theme.white};
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 24px;
+  letter-spacing: -0.5px;
 
-  &::after {
+  &::before {
     content: '';
-    position: absolute;
-    bottom: 0;
-    width: 56px;
-    height: 4px;
-    background-color: ${(props) => props.theme.purple};
-    left: calc(50% - 28px);
+    display: inline-block;
+    width: 6px;
+    height: 28px;
+    background: linear-gradient(to bottom, ${(props) => props.theme.orange}, #ea580c);
+    border-radius: 4px;
   }
 `;
 
 export const ContainerItems = styled.div`
-  background: url('${(props) => props.$imageUrl}');
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.2) 0%, rgba(15, 23, 42, 0.85) 100%),
+    url('${(props) => props.$imageUrl}');
   background-position: center;
   background-size: cover;
   border-radius: 20px;
-
+  border: 1px solid ${(props) => props.theme.cardBorder || props.theme.darkGray};
   display: flex;
-  align-items: center;
-  padding: 20px 10px;
-  width: 100%;
-  height: 250px;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 20px;
+  height: 220px;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
 
-  cursor: grab;
+  &:hover {
+    transform: translateY(-4px);
+    border-color: ${(props) => props.theme.orange};
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 107, 0, 0.2);
+  }
 `;
 
 export const CategoryButton = styled(Link)`
   color: ${(props) => props.theme.white};
-  background-color: rgba(0, 0, 0, 0.5);
-  padding: 10px 30px;
+  background-color: rgba(11, 15, 23, 0.75);
+  backdrop-filter: blur(8px);
+  padding: 10px 24px;
   border-radius: 30px;
-  font-size: 22.5px;
-  margin-top: 50px;
-  font-weight: 500;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  font-size: 16px;
+  font-weight: 700;
   text-decoration: none;
+  width: 100%;
+  text-align: center;
+  transition: all 0.2s ease;
 
-  &:hover {
-    background-color: ${(props) => props.theme.purple};
+  ${ContainerItems}:hover & {
+    background: linear-gradient(135deg, ${(props) => props.theme.orange}, #ea580c);
+    border-color: transparent;
+    box-shadow: 0 4px 14px rgba(255, 107, 0, 0.4);
   }
 `;
+

@@ -1,5 +1,4 @@
 import { useState } from 'react';
-
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import Box from '@mui/material/Box';
@@ -15,8 +14,9 @@ import PropTypes from 'prop-types';
 
 import { api } from '../../../services/api';
 import { formatDate } from '../../../utils/formatDate';
+import { formatPrice } from '../../../utils/formatPrice';
 import { orderStatusOptions } from './OrderStatus';
-import { ProductImage, SelectStatus } from './styles';
+import { ProductImage, SelectStatus, selectStatusStyles } from './styles';
 
 export function Row({ row, setOrders, orders }) {
   const [open, setOpen] = useState(false);
@@ -42,23 +42,31 @@ export function Row({ row, setOrders, orders }) {
 
   return (
     <>
-      <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
+      <TableRow
+        sx={{
+          '& > *': { borderBottom: '1px solid rgba(255, 255, 255, 0.05)' },
+          backgroundColor: open ? 'rgba(255, 255, 255, 0.02)' : 'inherit',
+        }}
+      >
         <TableCell>
           <IconButton
             aria-label="expand row"
             size="small"
             onClick={() => setOpen(!open)}
+            sx={{ color: '#FF6B00' }}
           >
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
-        <TableCell component="th" scope="row">
-          {row.orderId}
+        <TableCell component="th" scope="row" sx={{ color: '#F8FAFC', fontWeight: 600 }}>
+          #{row.orderId.slice(-6).toUpperCase()}
         </TableCell>
-        <TableCell>{row.name}</TableCell>
-        <TableCell>{formatDate(row.date)}</TableCell>
+        <TableCell sx={{ color: '#F8FAFC', fontWeight: 500 }}>{row.name}</TableCell>
+        <TableCell sx={{ color: '#94A3B8' }}>{formatDate(row.date)}</TableCell>
         <TableCell>
           <SelectStatus
+            styles={selectStatusStyles}
+            classNamePrefix="react-select"
             options={orderStatusOptions.filter((status) => status.id !== 0)}
             placeholder="Status"
             defaultValue={orderStatusOptions.find(
@@ -70,33 +78,68 @@ export function Row({ row, setOrders, orders }) {
           />
         </TableCell>
       </TableRow>
+
+
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
           <Collapse in={open} timeout="auto" unmountOnExit>
-            <Box sx={{ margin: 1 }}>
-              <Typography variant="h6" gutterBottom component="div">
-                Pedido
+            <Box
+              sx={{
+                margin: 2,
+                padding: 2,
+                backgroundColor: '#111827',
+                borderRadius: '12px',
+                border: '1px solid #334155',
+              }}
+            >
+              <Typography
+                variant="subtitle2"
+                gutterBottom
+                component="div"
+                sx={{ color: '#FF6B00', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.5px' }}
+              >
+                Itens do Pedido ({row.products.length} itens)
               </Typography>
-              <Table size="small" aria-label="purchases">
+              <Table size="small" aria-label="itens do pedido">
                 <TableHead>
                   <TableRow>
-                    <TableCell>Quantidade</TableCell>
-                    <TableCell>Produto</TableCell>
-                    <TableCell>Categoria</TableCell>
-                    <TableCell>Imagem do Produto</TableCell>
+                    <TableCell sx={{ color: '#94A3B8', fontWeight: 700 }}>Foto</TableCell>
+                    <TableCell sx={{ color: '#94A3B8', fontWeight: 700 }}>Produto</TableCell>
+                    <TableCell sx={{ color: '#94A3B8', fontWeight: 700 }}>Categoria</TableCell>
+                    <TableCell sx={{ color: '#94A3B8', fontWeight: 700 }}>Qtd</TableCell>
+                    <TableCell sx={{ color: '#94A3B8', fontWeight: 700 }}>Preço Unit.</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {row.products.map((product) => (
-                    <TableRow key={product.id}>
-                      <TableCell component="th" scope="row">
-                        {product.id}
-                      </TableCell>
-                      <TableCell>{product.name}</TableCell>
-                      <TableCell>{product.category}</TableCell>
-                      <TableCell>
+                    <TableRow key={product.id} sx={{ '&:last-child td': { border: 0 } }}>
+                      <TableCell sx={{ width: '60px' }}>
                         <ProductImage src={product.url} alt={product.name} />
                       </TableCell>
+                      <TableCell sx={{ color: '#FFFFFF', fontWeight: 600 }}>
+                        {product.name}
+                        {product.observation && (
+                          <Typography
+                            variant="caption"
+                            display="block"
+                            sx={{
+                              color: '#FF6B00',
+                              fontWeight: 700,
+                              backgroundColor: 'rgba(255, 107, 0, 0.12)',
+                              border: '1px solid rgba(255, 107, 0, 0.3)',
+                              borderRadius: '6px',
+                              padding: '2px 8px',
+                              marginTop: '4px',
+                              width: 'fit-content',
+                            }}
+                          >
+                            📝 Obs: {product.observation}
+                          </Typography>
+                        )}
+                      </TableCell>
+                      <TableCell sx={{ color: '#94A3B8' }}>{product.category}</TableCell>
+                      <TableCell sx={{ color: '#FF6B00', fontWeight: 800 }}>{product.quantity}x</TableCell>
+                      <TableCell sx={{ color: '#FFFFFF' }}>{formatPrice(product.price)}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -108,6 +151,7 @@ export function Row({ row, setOrders, orders }) {
     </>
   );
 }
+
 
 Row.propTypes = {
   orders: PropTypes.array.isRequired,

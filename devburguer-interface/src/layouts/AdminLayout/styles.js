@@ -2,7 +2,13 @@ import styled from 'styled-components';
 
 export const Container = styled.div`
   display: grid;
-  grid-template-columns: minmax(220px, 280px) 1fr;
+  grid-template-columns: 280px 1fr;
+  min-height: 100vh;
+  background-color: ${(props) => props.theme.mainBlack};
+
+  @media (max-width: 960px) {
+    grid-template-columns: 80px 1fr;
+  }
 
   main {
     display: flex;
@@ -10,14 +16,15 @@ export const Container = styled.div`
     flex: 1;
     width: 100%;
     height: 100vh;
-    background-color: ${(props) => props.theme.secondWhite};
+    background-color: ${(props) => props.theme.mainBlack};
     overflow-y: auto;
   }
 
   section {
     margin: 0 auto;
-    padding: 40px 20px;
-    max-width: 1200px;
+    padding: 36px 32px 60px;
+    max-width: 1320px;
     width: 100%;
   }
 `;
+

@@ -7,6 +7,7 @@ import {
   Home,
   Login,
   Menu,
+  MyOrders,
   Orders,
   NewProduct,
   EditProduct,
@@ -23,9 +24,11 @@ export function Router() {
         <Route path="/" element={<Home />} />
         <Route path="/cardapio" element={<Menu />} />
         <Route path="/carrinho" element={<Cart />} />
+        <Route path="/meus-pedidos" element={<MyOrders />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/complete" element={<CompletePayment />} />
       </Route>
+
 
       <Route path="/admin" element={<AdminLayout />}>
         <Route path="/admin/pedidos" element={<Orders />} />

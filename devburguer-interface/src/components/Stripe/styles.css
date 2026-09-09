@@ -1,12 +1,12 @@
 .App {
-  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'Plus Jakarta Sans', 'Poppins', sans-serif;
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
   display: flex;
   align-items: center;
   flex-direction: column;
-  height: 100vh;
-  width: 100vw;
+  min-height: 100vh;
+  width: 100%;
 }
 
 .container {
@@ -14,28 +14,28 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  min-height: 80vh;
+  min-height: 75vh;
+  padding: 40px 24px;
 }
 
 #payment-form {
-  background-color: #ffffff; /* ✨ Corrigido para branco hexadecimal */
-  width: 30vw;
-  min-width: 500px;
+  background-color: #1e293b;
+  width: 100%;
+  max-width: 520px;
   align-self: center;
-  box-shadow:
-    0px 0px 0px 0.5px rgba(50, 50, 93, 0.1),
-    0px 2px 5px 0px rgba(50, 50, 93, 0.1),
-    0px 1px 1.5px 0px rgba(0, 0, 0, 0.07);
-  border-radius: 7px;
-  padding: 40px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+  border: 1px solid #334155;
+  border-radius: 20px;
+  padding: 36px;
   margin-bottom: 30px;
 }
 
 #payment-message {
-  color: rgb(105, 115, 134);
-  font-size: 16px;
+  color: #ef4444;
+  font-size: 14px;
+  font-weight: 600;
   line-height: 20px;
-  padding-top: 12px;
+  padding-top: 14px;
   text-align: center;
 }
 
@@ -45,32 +45,43 @@
 
 /* Buttons and links */
 .button {
-  background: #0055de;
-  font-family: Arial, sans-serif;
-  color: #ffffff; /* ✨ Corrigido */
-  border-radius: 4px;
+  background: linear-gradient(135deg, #ff6b00, #ea580c);
+  font-family: 'Plus Jakarta Sans', 'Poppins', sans-serif;
+  color: #ffffff;
+  border-radius: 12px;
   border: 0;
-  padding: 12px 16px;
+  padding: 14px 20px;
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
   display: block;
   transition: all 0.2s ease;
-  box-shadow: 0px 4px 5.5px 0px rgba(0, 0, 0, 0.07);
+  box-shadow: 0 4px 14px rgba(255, 107, 0, 0.4);
   width: 100%;
 }
 
 .button:hover {
-  filter: contrast(115%);
+  background: linear-gradient(135deg, #fb923c, #ff6b00);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(255, 107, 0, 0.55);
+}
+
+.button:active {
+  transform: translateY(0);
 }
 
 .button:disabled {
   opacity: 0.5;
-  cursor: default;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
 .status-title {
   text-align: center;
+  font-size: 22px;
+  font-weight: 800;
+  color: #ffffff;
 }
 
 /* spinner/processing state, errors */
@@ -103,7 +114,7 @@
 .spinner:before {
   width: 10.4px;
   height: 20.4px;
-  background: #0055de;
+  background: #ff6b00;
   border-radius: 20.4px 0 0 20.4px;
   top: -0.2px;
   left: -0.2px;
@@ -116,7 +127,7 @@
 .spinner:after {
   width: 10.4px;
   height: 10.2px;
-  background: #0055de;
+  background: #ff6b00;
   border-radius: 0 10.2px 10.2px 0;
   top: -0.1px;
   left: 10.2px;
@@ -132,46 +143,49 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  row-gap: 30px;
-  width: 30vw;
-  min-width: 500px;
+  row-gap: 24px;
+  width: 100%;
+  max-width: 520px;
   min-height: 380px;
   align-self: center;
-  box-shadow:
-    0px 0px 0px 0.5px rgba(50, 50, 93, 0.1),
-    0px 2px 5px 0px rgba(50, 50, 93, 0.1),
-    0px 1px 1.5px 0px rgba(0, 0, 0, 0.07);
-  border-radius: 7px;
-  padding: 40px;
+  background-color: #1e293b;
+  border: 1px solid #334155;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+  border-radius: 20px;
+  padding: 40px 32px;
   opacity: 0;
   animation: fadeInAnimation 1s ease forwards;
-  margin-top: auto;
-  margin-bottom: auto;
+  margin: auto;
 }
 
 #status-icon {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 40px;
-  width: 40px;
+  height: 52px;
+  width: 52px;
   border-radius: 50%;
 }
 
 .link {
   text-decoration: none;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
-  font-family: Arial, sans-serif;
+  color: #ff6b00;
   display: block;
 }
+
 .link:hover {
-  filter: contrast(120%);
+  text-decoration: underline;
 }
 
 #details-table {
   overflow-x: auto;
   width: 100%;
+  background-color: #111827;
+  border: 1px solid #334155;
+  border-radius: 12px;
+  padding: 16px;
 }
 
 table {
@@ -179,42 +193,65 @@ table {
   font-size: 14px;
   border-collapse: collapse;
 }
+
 table tbody tr:first-child td {
-  border-top: 1px solid #e6e6e6;
-  padding-top: 10px;
+  border-top: none;
+  padding-top: 4px;
 }
+
 table tbody tr:last-child td {
-  border-bottom: 1px solid #e6e6e6;
+  border-bottom: none;
 }
+
 td {
-  padding-bottom: 10px;
+  padding: 8px 4px;
 }
 
 .TableContent {
   text-align: right;
-  color: #6d6e78;
+  color: #f8fafc;
+  font-weight: 600;
 }
 
 .TableLabel {
-  font-weight: 600;
-  color: #30313d;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  font-size: 12px;
 }
 
 #view-details {
-  color: #0055de;
+  color: #ff6b00;
+  display: inline-flex;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+#view-details:hover {
+  text-decoration: underline;
 }
 
 #retry-button {
   text-decoration: none;
   text-align: center;
-  background: #0055de;
+  background: linear-gradient(135deg, #ff6b00, #ea580c);
   color: #ffffff;
-  border-radius: 4px;
+  border-radius: 12px;
   border: 0;
-  padding: 12px 16px;
+  padding: 14px 20px;
+  font-size: 16px;
+  font-weight: 700;
   transition: all 0.2s ease;
-  box-shadow: 0px 4px 5.5px 0px rgba(0, 0, 0, 0.07);
+  box-shadow: 0 4px 14px rgba(255, 107, 0, 0.4);
   width: 100%;
+}
+
+#retry-button:hover {
+  background: linear-gradient(135deg, #fb923c, #ff6b00);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(255, 107, 0, 0.55);
 }
 
 @keyframes loading {
@@ -227,6 +264,7 @@ td {
     transform: rotate(360deg);
   }
 }
+
 @keyframes fadeInAnimation {
   to {
     opacity: 1;
@@ -234,9 +272,10 @@ td {
 }
 
 @media only screen and (max-width: 600px) {
-  form,
+  #payment-form,
   #payment-status {
-    width: 80vw;
-    min-width: initial;
+    width: 100%;
+    padding: 24px 16px;
   }
 }
+

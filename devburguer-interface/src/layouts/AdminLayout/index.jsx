@@ -1,12 +1,19 @@
 import { Outlet, Navigate } from 'react-router-dom';
-
 import { SideNavAdmin } from '../../components';
 import { Container } from './styles';
 
 export function AdminLayout() {
-  const { admin: isAdmin } = JSON.parse(
-    localStorage.getItem('devburguer:userData'),
-  );
+  const rawUserData = localStorage.getItem('devburguer:userData');
+  let isAdmin = false;
+
+  if (rawUserData) {
+    try {
+      const parsed = JSON.parse(rawUserData);
+      isAdmin = Boolean(parsed?.admin);
+    } catch {
+      isAdmin = false;
+    }
+  }
 
   return isAdmin ? (
     <Container>
@@ -18,6 +25,7 @@ export function AdminLayout() {
       </main>
     </Container>
   ) : (
-    <Navigate to="/login" />
+    <Navigate to="/login" replace />
   );
 }
+

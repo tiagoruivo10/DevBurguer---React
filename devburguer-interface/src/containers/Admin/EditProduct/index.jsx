@@ -2,55 +2,104 @@ import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import {
+  ArrowLeft,
+  CloudArrowUp,
+  CurrencyCircleDollar,
+  PencilSimple,
+  Tag,
+  CheckCircle,
+  Article,
+  ListChecks,
+  MinusCircle,
+} from '@phosphor-icons/react';
 
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Image } from '@phosphor-icons/react';
 import * as yup from 'yup';
 
 import { api } from '../../../services/api';
+import { ChipsInput } from '../../../components/ChipsInput';
+import { getProductDetails } from '../../../data/productsInfo';
 import {
+  BackButton,
   Container,
-  Form,
+  ContainerCheckbox,
+  ErrorMessage,
+  FormCard,
+  HeaderContainer,
+  Input,
   InputGroup,
   Label,
-  Input,
   LabelUpload,
+  PreviewContainer,
   Select,
+  selectStyles,
   SubmitButton,
-  ErrorMessage,
-  ContainerCheckbox,
+  Textarea,
 } from './styles';
+
 
 const schema = yup.object({
   name: yup.string().required('Digite o nome do produto'),
   price: yup
     .number()
-    .positive()
+    .positive('O preço deve ser positivo')
     .required('Digite o preço do produto')
-    .typeError('Digite o preço do produto'),
+    .typeError('Digite um valor numérico válido'),
   category: yup.object().required('Escolha uma categoria'),
   offer: yup.boolean(),
+  description: yup.string().nullable(),
+  ingredients: yup.string().nullable(),
+  removable: yup.string().nullable(),
 });
 
 export function EditProduct() {
   const [fileName, setFileName] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
   const [categories, setCategories] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
+  const location = useLocation();
+  const product = location.state?.product;
 
-  const {
-    state: { product },
-  } = useLocation();
+  const [ingredientsChips, setIngredientsChips] = useState(() => {
+    if (product?.ingredients) {
+      return product.ingredients.split(',').map((s) => s.trim()).filter(Boolean);
+    }
+    const defaultDetails = getProductDetails(product?.name);
+    return defaultDetails?.ingredients || [];
+  });
+
+  const [removableChips, setRemovableChips] = useState(() => {
+    if (product?.removable) {
+      return product.removable.split(',').map((s) => s.trim()).filter(Boolean);
+    }
+    const defaultDetails = getProductDetails(product?.name);
+    return defaultDetails?.removable || [];
+  });
 
   useEffect(() => {
-    async function loadCategories() {
-      const { data } = await api.get('/categories');
+    if (!product) {
+      navigate('/admin/produtos');
+      return;
+    }
 
-      setCategories(data);
+    if (product.url) {
+      setPreviewUrl(product.url);
+    }
+
+    async function loadCategories() {
+      try {
+        const { data } = await api.get('/categories');
+        setCategories(data);
+      } catch (err) {
+        console.error('Erro ao carregar categorias:', err);
+      }
     }
 
     loadCategories();
-  }, []);
+  }, [product, navigate]);
 
   const {
     register,
@@ -60,69 +109,89 @@ export function EditProduct() {
   } = useForm({
     resolver: yupResolver(schema),
   });
+
+  if (!product) {
+    return null;
+  }
+
   const onSubmit = async (data) => {
-    const productFormData = new FormData();
+    try {
+      setIsLoading(true);
+      const productFormData = new FormData();
 
-    productFormData.append('name', data.name);
-    productFormData.append('price', data.price * 100);
-    productFormData.append('category_id', data.category.id);
-    productFormData.append('file', data.file[0]);
-    productFormData.append('offer', data.offer);
+      productFormData.append('name', data.name);
+      productFormData.append('price', Math.round(data.price * 100));
+      productFormData.append('category_id', data.category.id);
+      if (data.file && data.file[0]) {
+        productFormData.append('file', data.file[0]);
+      }
+      productFormData.append('offer', data.offer || false);
+      productFormData.append('description', data.description || '');
+      productFormData.append('ingredients', ingredientsChips.join(', '));
+      productFormData.append('removable', removableChips.join(', '));
 
-    await toast.promise(api.put(`/products/${product.id}`, productFormData), {
-      pending: 'Editando o produto...',
-      success: 'Produto editado com sucesso!',
-      error: 'Falha ao editar produto, tente novamente!',
-    });
+      await toast.promise(api.put(`/products/${product.id}`, productFormData), {
+        pending: 'Atualizando produto...',
+        success: 'Produto atualizado com sucesso! 🎉',
+        error: 'Falha ao editar produto, tente novamente.',
+      });
 
-    setTimeout(() => {
-      navigate('/admin/produtos');
-    }, 2000);
+      setTimeout(() => {
+        navigate('/admin/produtos');
+      }, 1200);
+    } catch {
+      // Toast handles error message
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
     <Container>
-      <Form onSubmit={handleSubmit(onSubmit)}>
+      <HeaderContainer>
+        <BackButton onClick={() => navigate('/admin/produtos')}>
+          <ArrowLeft size={18} weight="bold" />
+          Voltar para Produtos
+        </BackButton>
+        <h2>
+          <PencilSimple size={28} weight="duotone" />
+          Editar Produto: {product.name}
+        </h2>
+        <p>Atualize os dados, imagem ou status de oferta do item</p>
+      </HeaderContainer>
+
+      <FormCard onSubmit={handleSubmit(onSubmit)}>
         <InputGroup>
-          <Label>Nome</Label>
+          <Label>
+            <Tag size={16} />
+            Nome do Produto
+          </Label>
           <Input
             type="text"
-            {...register('name')}
             defaultValue={product.name}
+            placeholder="Nome do produto"
+            {...register('name')}
           />
           <ErrorMessage>{errors?.name?.message}</ErrorMessage>
         </InputGroup>
 
         <InputGroup>
-          <Label>Preço</Label>
+          <Label>
+            <CurrencyCircleDollar size={16} />
+            Preço (R$)
+          </Label>
           <Input
             type="number"
+            step="0.01"
+            defaultValue={(product.price / 100).toFixed(2)}
+            placeholder="Ex: 34.90"
             {...register('price')}
-            defaultValue={product.price / 100}
           />
           <ErrorMessage>{errors?.price?.message}</ErrorMessage>
         </InputGroup>
 
         <InputGroup>
-          <LabelUpload>
-            <Image />
-            <input
-              type="file"
-              {...register('file')}
-              accept="image/png, image/jpeg"
-              onChange={(value) => {
-                setFileName(value.target.files[0]?.name);
-                register('file').onChange(value);
-              }}
-            />
-
-            {fileName || 'Upload do Produto'}
-          </LabelUpload>
-          <ErrorMessage>{errors?.file?.message}</ErrorMessage>
-        </InputGroup>
-
-        <InputGroup>
-          <Label>Categoria</Label>
+          <Label>Categoria do Produto</Label>
           <Controller
             name="category"
             control={control}
@@ -130,12 +199,13 @@ export function EditProduct() {
             render={({ field }) => (
               <Select
                 {...field}
+                styles={selectStyles}
+                classNamePrefix="react-select"
                 options={categories}
                 getOptionLabel={(category) => category.name}
                 getOptionValue={(category) => category.id}
-                placeholder="Categorias"
+                placeholder="Selecione uma categoria..."
                 menuPortalTarget={document.body}
-                defaultValue={categories.category}
               />
             )}
           />
@@ -144,18 +214,87 @@ export function EditProduct() {
         </InputGroup>
 
         <InputGroup>
-          <ContainerCheckbox>
-            <input
-              type="checkbox"
-              defaultChecked={product.offer}
-              {...register('offer')}
-            />
-            <Label>Produto em Oferta?</Label>
-          </ContainerCheckbox>
+          <Label>
+            <Article size={16} />
+            Descrição Gastronômica do Produto
+          </Label>
+          <Textarea
+            rows={3}
+            defaultValue={product.description || getProductDetails(product.name).description || ''}
+            placeholder="Ex: Smash bovino artesanal suculento, queijo cheddar derretido, alface fresca..."
+            {...register('description')}
+          />
+          <ErrorMessage>{errors?.description?.message}</ErrorMessage>
         </InputGroup>
 
-        <SubmitButton>Editar Produto</SubmitButton>
-      </Form>
+        {/* Balõezinhos Interativos de Ingredientes */}
+        <ChipsInput
+          label="Ingredientes & Composição"
+          icon={ListChecks}
+          chips={ingredientsChips}
+          onChange={setIngredientsChips}
+          placeholder="Ex: Pão brioche, Smash 150g... (Aperte Enter)"
+          variant="ingredient"
+          helperText="💡 Dica: Clique no texto de qualquer balãozinho para editar ou no ✕ para apagar."
+        />
+
+        {/* Balõezinhos Interativos de Opções de Retirada */}
+        <ChipsInput
+          label="Prefere sem algum item? (Opções de Retirada)"
+          icon={MinusCircle}
+          chips={removableChips}
+          onChange={setRemovableChips}
+          placeholder="Ex: Sem cebola, Molho à parte... (Aperte Enter)"
+          variant="removable"
+          helperText="💡 Dica: Esses balõezinhos viram os chips clicáveis para o cliente retirar no modal."
+        />
+
+        <InputGroup>
+          <Label>Imagem do Produto</Label>
+          <LabelUpload>
+            <CloudArrowUp size={24} weight="duotone" />
+            <span>{fileName || 'Clique caso queira alterar a foto do produto'}</span>
+            <input
+              type="file"
+              {...register('file')}
+              accept="image/png, image/jpeg"
+              onChange={(e) => {
+                const file = e.target.files[0];
+                if (file) {
+                  setFileName(file.name);
+                  setPreviewUrl(URL.createObjectURL(file));
+                }
+                register('file').onChange(e);
+              }}
+            />
+          </LabelUpload>
+          {previewUrl && (
+            <PreviewContainer>
+              <img src={previewUrl} alt="Preview do Produto" />
+              <span>{fileName ? 'Nova imagem selecionada' : 'Imagem atual cadastrada'}</span>
+            </PreviewContainer>
+          )}
+          <ErrorMessage>{errors?.file?.message}</ErrorMessage>
+        </InputGroup>
+
+        <ContainerCheckbox>
+          <input
+            type="checkbox"
+            id="edit-offer-checkbox"
+            defaultChecked={product.offer}
+            {...register('offer')}
+          />
+          <label htmlFor="edit-offer-checkbox">
+            Colocar este produto em <strong>Oferta Especial</strong>
+          </label>
+        </ContainerCheckbox>
+
+        <SubmitButton type="submit" disabled={isLoading}>
+          <CheckCircle size={20} weight="bold" />
+          {isLoading ? 'Salvando Alterações...' : 'Atualizar Dados do Produto'}
+        </SubmitButton>
+      </FormCard>
     </Container>
   );
 }
+

@@ -1,4 +1,4 @@
-import Logo from '../../assets/logo.png';
+import { ShoppingCart } from '@phosphor-icons/react';
 import { CartItems, CartResume } from '../../components';
 import { Banner, Container, Content, Title } from './styles';
 
@@ -6,13 +6,23 @@ export function Cart() {
   return (
     <Container>
       <Banner>
-        <img src={Logo} alt="logo tiago burguer" />
+        <div className="badge">
+          <ShoppingCart size={18} weight="fill" />
+          <span>Finalização de Pedido</span>
+        </div>
+        <Title>Seu Carrinho de Compras</Title>
+        <p>Confira os itens selecionados antes de prosseguir para o pagamento.</p>
       </Banner>
-      <Title>Checkout - Pedido</Title>
+
       <Content>
-        <CartItems></CartItems>
-        <CartResume />
+        <div className="cart-items-wrapper">
+          <CartItems />
+        </div>
+        <div className="cart-resume-wrapper">
+          <CartResume />
+        </div>
       </Content>
     </Container>
   );
 }
+

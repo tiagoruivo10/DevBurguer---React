@@ -7,9 +7,26 @@ export const api = axios.create({
 api.interceptors.request.use((config) => {
   const userData = localStorage.getItem('devburguer:userData');
 
-  const token = userData && JSON.parse(userData).token;
-
-  config.headers.authorization = `Bearer ${token}`;
+  if (userData) {
+    try {
+      const parsed = JSON.parse(userData);
+      if (parsed?.token) {
+        config.headers.authorization = `Bearer ${parsed.token}`;
+      }
+    } catch {
+      localStorage.removeItem('devburguer:userData');
+    }
+  }
 
   return config;
 });
+
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem('devburguer:userData');
+    }
+    return Promise.reject(error);
+  },
+);

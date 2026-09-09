@@ -1,68 +1,148 @@
-import TrashIcon from '../../assets/trash.svg';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Minus, Plus, Trash, ShoppingBag, NotePencil, X } from '@phosphor-icons/react';
+
 import { useCart } from '../../hooks/CartContext';
 import { formatPrice } from '../../utils/formatPrice';
-import { Table } from '../index';
 import {
+  Container,
+  ItemCard,
   ButtonGroup,
-  EmptyCart,
-  ProductImage,
   ProductTotalPrice,
-  TrashImage,
+  TrashButton,
+  ObservationBox,
+  EmptyCart,
 } from './styles';
 
 export function CartItems() {
-  const { cartProducts, increaseProducts, decreaseProducts, deleteProducts } =
-    useCart();
+  const {
+    cartProducts,
+    increaseProducts,
+    decreaseProducts,
+    deleteProducts,
+    updateProductObservation,
+  } = useCart();
+
+  const [openedObsId, setOpenedObsId] = useState(null);
+  const navigate = useNavigate();
+
+  const toggleObs = (id) => {
+    setOpenedObsId((prev) => (prev === id ? null : id));
+  };
+
+  if (!cartProducts?.length) {
+    return (
+      <EmptyCart>
+        <div className="icon-box">
+          <ShoppingBag size={38} weight="duotone" />
+        </div>
+        <p>Seu carrinho está vazio</p>
+        <span>Que tal escolher um delicioso hambúrguer artesanal para começar?</span>
+        <button type="button" onClick={() => navigate('/cardapio')}>
+          Explorar Cardápio
+        </button>
+      </EmptyCart>
+    );
+  }
+
   return (
-    <Table.Root>
-      <Table.Header>
-        <Table.Tr>
-          <Table.Th></Table.Th>
-          <Table.Th>Itens</Table.Th>
-          <Table.Th>Preço</Table.Th>
-          <Table.Th>Quantidade</Table.Th>
-          <Table.Th>Total</Table.Th>
-          <Table.Th></Table.Th>
-        </Table.Tr>
-      </Table.Header>
-      <Table.Body>
-        {cartProducts?.length ? (
-          cartProducts.map((product) => (
-            <Table.Tr key={product.id}>
-              <Table.Td>
-                <ProductImage src={product.url} />
-              </Table.Td>
-              <Table.Td>{product.name}</Table.Td>
-              <Table.Td>{product.currencyValue}</Table.Td>
-              <Table.Td>
+    <Container>
+      {cartProducts.map((product) => {
+        const isObsOpen = openedObsId === product.id || Boolean(product.observation);
+
+        return (
+          <ItemCard key={product.id}>
+            <div className="main-row">
+              <div className="product-info">
+                <img
+                  src={product.url}
+                  alt={product.name}
+                  className="product-thumb"
+                  onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = 'http://localhost:3001/product-file/double-cheese.png';
+                  }}
+                />
+                <div className="details">
+                  <h4>{product.name}</h4>
+                  <span className="unit-price">
+                    {formatPrice(product.price)} cada
+                  </span>
+                </div>
+              </div>
+
+              <div className="actions-group">
                 <ButtonGroup>
-                  <button onClick={() => decreaseProducts(product.id)}>
-                    -
+                  <button
+                    type="button"
+                    onClick={() => decreaseProducts(product.id)}
+                    title="Diminuir quantidade"
+                  >
+                    <Minus size={14} weight="bold" />
                   </button>
-                  {product.quantity}
-                  <button onClick={() => increaseProducts(product.id)}>
-                    +
+                  <span>{product.quantity}</span>
+                  <button
+                    type="button"
+                    onClick={() => increaseProducts(product.id)}
+                    title="Aumentar quantidade"
+                  >
+                    <Plus size={14} weight="bold" />
                   </button>
                 </ButtonGroup>
-              </Table.Td>
-              <Table.Td>
+
                 <ProductTotalPrice>
                   {formatPrice(product.quantity * product.price)}
                 </ProductTotalPrice>
-              </Table.Td>
-              <Table.Td>
-                <TrashImage
-                  src={TrashIcon}
-                  alt="lixeira"
+
+                <TrashButton
+                  type="button"
                   onClick={() => deleteProducts(product.id)}
-                />
-              </Table.Td>
-            </Table.Tr>
-          ))
-        ) : (
-          <EmptyCart>Carrinho Vazio</EmptyCart>
-        )}
-      </Table.Body>
-    </Table.Root>
+                  title="Remover produto"
+                >
+                  <Trash size={18} />
+                </TrashButton>
+              </div>
+            </div>
+
+            {/* Campo de Observação do Item */}
+            <ObservationBox $hasObs={Boolean(product.observation)}>
+              {!isObsOpen ? (
+                <button
+                  type="button"
+                  className="obs-trigger"
+                  onClick={() => toggleObs(product.id)}
+                >
+                  <NotePencil size={14} weight="bold" />
+                  <span>Adicionar observação (ex: sem cebola, ponto da carne)</span>
+                </button>
+              ) : (
+                <div className="obs-input-wrapper">
+                  <NotePencil size={16} color="#FF6B00" weight="bold" />
+                  <input
+                    type="text"
+                    value={product.observation || ''}
+                    placeholder="Ex: sem cebola, carne bem passada, sem gelo no refri..."
+                    onChange={(e) => updateProductObservation(product.id, e.target.value)}
+                    autoFocus={openedObsId === product.id}
+                  />
+                  {product.observation && (
+                    <button
+                      type="button"
+                      className="clear-btn"
+                      onClick={() => updateProductObservation(product.id, '')}
+                      title="Limpar observação"
+                    >
+                      <X size={14} weight="bold" />
+                    </button>
+                  )}
+                </div>
+              )}
+            </ObservationBox>
+          </ItemCard>
+        );
+      })}
+    </Container>
   );
 }
+
+export default CartItems;

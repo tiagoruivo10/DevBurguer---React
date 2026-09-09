@@ -1,44 +1,57 @@
 import styled from 'styled-components';
 
-export const Container = styled.div`
-  .carousel-item {
-    padding-right: 40px;
-  }
-  overflow-x: hidden;
+export const Container = styled.section`
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto 64px;
+  padding: 0 24px;
 
-  .react-multi-carousel-list {
-    overflow: visible;
+  .carousel-item {
+    padding: 12px;
+  }
+
+  .react-multiple-carousel__arrow {
+    background-color: rgba(30, 41, 59, 0.85);
+    backdrop-filter: blur(8px);
+    border: 1px solid ${(props) => props.theme.darkGray};
+    min-width: 44px;
+    min-height: 44px;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background-color: ${(props) => props.theme.green};
+      border-color: ${(props) => props.theme.green};
+      box-shadow: 0 0 15px rgba(16, 185, 129, 0.5);
+    }
   }
 
   .react-multiple-carousel__arrow--left {
-    left: 15px;
-    top: 10px;
+    left: -10px;
   }
 
   .react-multiple-carousel__arrow--right {
-    top: 10px;
+    right: -10px;
   }
-
-  padding-left: 40px;
-  padding-bottom: 40px;
 `;
 
 export const Title = styled.h2`
-  font-size: 32px;
+  font-size: 28px;
   font-weight: 800;
-  color: ${(props) => props.theme.green};
-  padding-bottom: 12px;
-  position: relative;
-  text-align: center;
-  margin: 70px 0;
+  color: ${(props) => props.theme.white};
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 24px;
+  letter-spacing: -0.5px;
 
-  &::after {
+  &::before {
     content: '';
-    position: absolute;
-    bottom: 0;
-    width: 56px;
-    height: 4px;
-    background-color: ${(props) => props.theme.green};
-    left: calc(50% - 28px);
+    display: inline-block;
+    width: 6px;
+    height: 28px;
+    background: linear-gradient(to bottom, ${(props) => props.theme.green}, #059669);
+    border-radius: 4px;
   }
 `;
+
