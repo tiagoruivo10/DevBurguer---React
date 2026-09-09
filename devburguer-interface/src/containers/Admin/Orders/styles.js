@@ -169,4 +169,221 @@ export const SelectStatus = styled(Select)`
   width: 220px;
 `;
 
+export const Toolbar = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  background-color: ${(props) => props.theme.secondBlack};
+  border: 1px solid ${(props) => props.theme.cardBorder || props.theme.darkGray};
+  border-radius: 16px;
+  padding: 14px 20px;
+  margin-bottom: 20px;
+`;
+
+export const DateFilterGroup = styled.div`
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+
+  .filter-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #94a3b8;
+    margin-right: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+`;
+
+export const DateButton = styled.button`
+  background: ${(props) =>
+    props.$isActive ? 'rgba(255, 107, 0, 0.15)' : '#111827'};
+  border: 1px solid
+    ${(props) => (props.$isActive ? props.theme.orange : '#334155')};
+  color: ${(props) => (props.$isActive ? props.theme.orange : '#94a3b8')};
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    color: #ffffff;
+    border-color: ${(props) => props.theme.orange};
+  }
+
+  .badge {
+    background: ${(props) =>
+      props.$isActive ? props.theme.orange : '#334155'};
+    color: ${(props) => (props.$isActive ? '#ffffff' : '#cbd5e1')};
+    font-size: 11px;
+    padding: 1px 6px;
+    border-radius: 10px;
+    font-weight: 800;
+  }
+`;
+
+export const LiveControl = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  .live-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    color: #10b981;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 6px 12px;
+    border-radius: 20px;
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: #10b981;
+      box-shadow: 0 0 10px #10b981;
+      animation: pulse 1.8s infinite;
+    }
+  }
+
+  .sound-btn {
+    background: #111827;
+    border: 1px solid #334155;
+    color: ${(props) => (props.$isMuted ? '#64748b' : '#f59e0b')};
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      border-color: #f59e0b;
+    }
+  }
+
+  @keyframes pulse {
+    0% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.4;
+      transform: scale(0.85);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+`;
+
+export const DayGroup = styled.div`
+  margin-bottom: 24px;
+  background-color: ${(props) => props.theme.secondBlack};
+  border: 1px solid ${(props) => props.theme.cardBorder || props.theme.darkGray};
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3);
+`;
+
+export const DayGroupHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 24px;
+  background: ${(props) =>
+    props.$isToday
+      ? 'linear-gradient(90deg, rgba(255, 107, 0, 0.12) 0%, rgba(30, 41, 59, 0.4) 100%)'
+      : 'rgba(255, 255, 255, 0.02)'};
+  border-bottom: ${(props) => (props.$isOpen ? '1px solid #334155' : 'none')};
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: ${(props) =>
+      props.$isToday
+        ? 'linear-gradient(90deg, rgba(255, 107, 0, 0.18) 0%, rgba(30, 41, 59, 0.6) 100%)'
+        : 'rgba(255, 255, 255, 0.05)'};
+  }
+
+  .left-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    .day-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: ${(props) => props.theme.white};
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      svg {
+        color: ${(props) => (props.$isToday ? props.theme.orange : '#94A3B8')};
+      }
+    }
+
+    .today-tag {
+      background: linear-gradient(135deg, ${(props) => props.theme.orange}, #ea580c);
+      color: #ffffff;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 10px;
+      letter-spacing: 0.5px;
+    }
+  }
+
+  .right-meta {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    .stats-pill {
+      font-size: 13px;
+      font-weight: 700;
+      color: #cbd5e1;
+      background-color: #111827;
+      border: 1px solid #334155;
+      padding: 5px 12px;
+      border-radius: 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+
+      strong {
+        color: ${(props) => props.theme.orange};
+      }
+    }
+
+    .toggle-arrow {
+      color: #94a3b8;
+      display: flex;
+      align-items: center;
+      transition: transform 0.2s ease;
+      transform: ${(props) => (props.$isOpen ? 'rotate(180deg)' : 'rotate(0deg)')};
+    }
+  }
+`;
+
+
 

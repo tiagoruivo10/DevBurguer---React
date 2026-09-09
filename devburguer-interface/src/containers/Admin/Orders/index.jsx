@@ -1,5 +1,15 @@
-import { useEffect, useState } from 'react';
-import { Clock, Receipt } from '@phosphor-icons/react';
+import { useEffect, useState, useRef, useCallback, useMemo } from 'react';
+import {
+  CalendarBlank,
+  CalendarCheck,
+  CaretDown,
+  Clock,
+  CurrencyCircleDollar,
+  Receipt,
+  SpeakerHigh,
+  SpeakerSlash,
+} from '@phosphor-icons/react';
+import { toast } from 'react-toastify';
 
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
@@ -10,83 +20,257 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 
 import { api } from '../../../services/api';
+import { formatPrice } from '../../../utils/formatPrice';
+import { playNewOrderSound } from '../../../utils/playOrderSound';
 import { orderStatusOptions } from './OrderStatus';
 import { Row } from './row';
 import {
   Container,
+  DateButton,
+  DateFilterGroup,
+  DayGroup,
+  DayGroupHeader,
   Filter,
   FilterOptions,
   HeaderContainer,
+  LiveControl,
   TableWrapper,
+  Toolbar,
 } from './styles';
+
+function isSameDay(d1, d2) {
+  return (
+    d1.getFullYear() === d2.getFullYear() &&
+    d1.getMonth() === d2.getMonth() &&
+    d1.getDate() === d2.getDate()
+  );
+}
+
+function getDayHeaderInfo(dateStr) {
+  const d = new Date(dateStr);
+  const now = new Date();
+  const yesterday = new Date();
+  yesterday.setDate(now.getDate() - 1);
+
+  if (isSameDay(d, now)) {
+    return {
+      title: 'Hoje',
+      isToday: true,
+      formattedDate: d.toLocaleDateString('pt-BR', {
+        day: '2-digit',
+        month: 'long',
+      }),
+    };
+  }
+
+  if (isSameDay(d, yesterday)) {
+    return {
+      title: 'Ontem',
+      isYesterday: true,
+      formattedDate: d.toLocaleDateString('pt-BR', {
+        day: '2-digit',
+        month: 'long',
+      }),
+    };
+  }
+
+  return {
+    title: d.toLocaleDateString('pt-BR', {
+      weekday: 'long',
+      day: '2-digit',
+      month: 'long',
+    }),
+    isToday: false,
+    formattedDate: d.toLocaleDateString('pt-BR', {
+      day: '2-digit',
+      month: 'long',
+      year: 'numeric',
+    }),
+  };
+}
 
 export function Orders() {
   const [orders, setOrders] = useState([]);
-  const [filteredOrders, setFilteredOrders] = useState([]);
   const [activeStatus, setActiveStatus] = useState(0);
-  const [rows, setRows] = useState([]);
+  const [dateFilter, setDateFilter] = useState('todos'); // 'hoje' | 'ontem' | '7dias' | 'todos'
+  const [openDays, setOpenDays] = useState({});
+  const [isMuted, setIsMuted] = useState(() => {
+    return localStorage.getItem('devburguer:orders_muted') === 'true';
+  });
 
-  useEffect(() => {
-    async function loadOrders() {
-      try {
-        const { data } = await api.get('orders');
-        setOrders(data);
-        setFilteredOrders(data);
-      } catch (err) {
-        console.error('Erro ao carregar pedidos:', err);
+  const ordersCountRef = useRef(null);
+
+  const toggleSound = () => {
+    setIsMuted((prev) => {
+      const next = !prev;
+      localStorage.setItem('devburguer:orders_muted', String(next));
+      toast.info(next ? '🔕 Som de novos pedidos silenciado.' : '🔔 Som de novos pedidos ativado!');
+      return next;
+    });
+  };
+
+  const loadOrders = useCallback(async (isSilent = false) => {
+    try {
+      const { data } = await api.get('orders');
+
+      // Detecta novos pedidos durante o auto-refresh para tocar a campainha
+      if (isSilent && ordersCountRef.current !== null && data.length > ordersCountRef.current) {
+        if (!isMuted) {
+          playNewOrderSound();
+        }
+        const newestOrder = data[0];
+        const code = (newestOrder?.id || '').slice(-6).toUpperCase();
+        toast.success(`🔔 Novo pedido recebido! #${code || ''}`, {
+          autoClose: 5000,
+        });
       }
-    }
 
-    loadOrders();
-  }, []);
+      ordersCountRef.current = data.length;
+      setOrders(data);
+    } catch (err) {
+      console.error('Erro ao carregar pedidos:', err);
+    }
+  }, [isMuted]);
+
+  // Carregamento inicial e auto-refresh em tempo real a cada 5 segundos
+  useEffect(() => {
+    loadOrders(false);
+
+    const interval = setInterval(() => {
+      loadOrders(true);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [loadOrders]);
+
+  // Cálculo das contagens por data
+  const dateCounts = useMemo(() => {
+    const now = new Date();
+    const todayMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const yesterdayMidnight = new Date(todayMidnight);
+    yesterdayMidnight.setDate(todayMidnight.getDate() - 1);
+    const sevenDaysAgo = new Date(todayMidnight);
+    sevenDaysAgo.setDate(todayMidnight.getDate() - 6);
+
+    let hoje = 0;
+    let ontem = 0;
+    let seteDias = 0;
+
+    orders.forEach((o) => {
+      const d = new Date(o.createdAt || o.created_at);
+      if (d >= todayMidnight) hoje++;
+      if (d >= yesterdayMidnight && d < todayMidnight) ontem++;
+      if (d >= sevenDaysAgo) seteDias++;
+    });
+
+    return {
+      hoje,
+      ontem,
+      seteDias,
+      todos: orders.length,
+    };
+  }, [orders]);
+
+  // Filtragem combinada: Período de Data + Status do Pedido
+  const filteredOrders = useMemo(() => {
+    const now = new Date();
+    const todayMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const yesterdayMidnight = new Date(todayMidnight);
+    yesterdayMidnight.setDate(todayMidnight.getDate() - 1);
+    const sevenDaysAgo = new Date(todayMidnight);
+    sevenDaysAgo.setDate(todayMidnight.getDate() - 6);
+
+    return orders.filter((order) => {
+      const orderDate = new Date(order.createdAt || order.created_at);
+
+      // Filtro de Data
+      if (dateFilter === 'hoje' && orderDate < todayMidnight) return false;
+      if (
+        dateFilter === 'ontem' &&
+        (orderDate < yesterdayMidnight || orderDate >= todayMidnight)
+      ) {
+        return false;
+      }
+      if (dateFilter === '7dias' && orderDate < sevenDaysAgo) return false;
+
+      // Filtro de Status
+      if (activeStatus !== 0) {
+        const statusOption = orderStatusOptions.find((item) => item.id === activeStatus);
+        if (statusOption && order.status !== statusOption.value) {
+          return false;
+        }
+      }
+
+      return true;
+    });
+  }, [orders, dateFilter, activeStatus]);
+
+  // Agrupamento dos pedidos filtrados por dia (decrescente)
+  const groupedOrders = useMemo(() => {
+    const groups = {};
+
+    filteredOrders.forEach((order) => {
+      const d = new Date(order.createdAt || order.created_at);
+      const key = !isNaN(d.getTime()) ? d.toISOString().slice(0, 10) : 'Sem data';
+
+      if (!groups[key]) {
+        groups[key] = [];
+      }
+      groups[key].push(order);
+    });
+
+    // Ordena as chaves por data decrescente
+    const sortedKeys = Object.keys(groups).sort((a, b) => b.localeCompare(a));
+
+    return sortedKeys.map((key) => ({
+      key,
+      orders: groups[key],
+    }));
+  }, [filteredOrders]);
+
+  // Abre automaticamente o primeiro dia se ainda não estiver definido
+  useEffect(() => {
+    if (groupedOrders.length > 0) {
+      const firstKey = groupedOrders[0].key;
+      setOpenDays((prev) => ({
+        ...prev,
+        [firstKey]: prev[firstKey] !== undefined ? prev[firstKey] : true,
+      }));
+    }
+  }, [groupedOrders]);
+
+  const toggleDay = (key) => {
+    setOpenDays((prev) => ({
+      ...prev,
+      [key]: !prev[key],
+    }));
+  };
+
+  const getStatusCount = (statusValue) => {
+    if (statusValue === 'Todos') return filteredOrders.length;
+    return filteredOrders.filter((o) => o.status === statusValue).length;
+  };
 
   function createData(order) {
     return {
       name: order.user?.name || 'Cliente',
-      orderId: order._id,
-      date: order.createdAt,
+      orderId: order._id || order.id,
+      date: order.createdAt || order.created_at,
       status: order.status,
-      products: order.products,
+      products: order.products || [],
     };
   }
 
-  useEffect(() => {
-    const newRows = filteredOrders.map((order) => createData(order));
-    setRows(newRows);
-  }, [filteredOrders]);
-
-  function handleStatus(status) {
-    if (status.id === 0) {
-      setFilteredOrders(orders);
-    } else {
-      const newOrders = orders.filter((order) => order.status === status.value);
-      setFilteredOrders(newOrders);
-    }
-
-    setActiveStatus(status.id);
-  }
-
-  useEffect(() => {
-    if (activeStatus === 0) {
-      setFilteredOrders(orders);
-    } else {
-      const statusOption = orderStatusOptions.find(
-        (item) => item.id === activeStatus,
+  // Faturamento total do período selecionado
+  const totalRevenue = useMemo(() => {
+    return filteredOrders.reduce((acc, order) => {
+      const orderTotal = (order.products || []).reduce(
+        (sub, p) => sub + (p.price || 0) * (p.quantity || 1),
+        0,
       );
-
-      if (statusOption) {
-        const newFilteredOrders = orders.filter(
-          (order) => order.status === statusOption.value,
-        );
-        setFilteredOrders(newFilteredOrders);
-      }
-    }
-  }, [orders, activeStatus]);
-
-  const getStatusCount = (statusValue) => {
-    if (statusValue === 'Todos') return orders.length;
-    return orders.filter((o) => o.status === statusValue).length;
-  };
+      return acc + orderTotal;
+    }, 0);
+  }, [filteredOrders]);
 
   return (
     <Container>
@@ -94,23 +278,95 @@ export function Orders() {
         <div>
           <h2>
             <Receipt size={28} weight="duotone" />
-            Painel de Pedidos
+            Painel de Pedidos da Cozinha
           </h2>
           <p>Gerencie o fluxo de preparo e entrega em tempo real</p>
         </div>
-        <div className="total-badge">
-          <Clock size={18} />
-          <span>{orders.length} pedidos no total</span>
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+          <div className="total-badge">
+            <Clock size={18} />
+            <span>{filteredOrders.length} pedidos exibidos</span>
+          </div>
+
+          <div className="total-badge" style={{ borderColor: 'rgba(255, 107, 0, 0.4)', color: '#FF6B00' }}>
+            <CurrencyCircleDollar size={18} />
+            <span>{formatPrice(totalRevenue)}</span>
+          </div>
         </div>
       </HeaderContainer>
 
+      {/* Barra de Ferramentas: Filtros de Período + Indicador Ao Vivo + Som */}
+      <Toolbar>
+        <DateFilterGroup>
+          <span className="filter-title">
+            <CalendarBlank size={16} />
+            Período:
+          </span>
+
+          <DateButton
+            type="button"
+            $isActive={dateFilter === 'hoje'}
+            onClick={() => setDateFilter('hoje')}
+          >
+            <span>Hoje</span>
+            <span className="badge">{dateCounts.hoje}</span>
+          </DateButton>
+
+          <DateButton
+            type="button"
+            $isActive={dateFilter === 'ontem'}
+            onClick={() => setDateFilter('ontem')}
+          >
+            <span>Ontem</span>
+            <span className="badge">{dateCounts.ontem}</span>
+          </DateButton>
+
+          <DateButton
+            type="button"
+            $isActive={dateFilter === '7dias'}
+            onClick={() => setDateFilter('7dias')}
+          >
+            <span>Últimos 7 dias</span>
+            <span className="badge">{dateCounts.seteDias}</span>
+          </DateButton>
+
+          <DateButton
+            type="button"
+            $isActive={dateFilter === 'todos'}
+            onClick={() => setDateFilter('todos')}
+          >
+            <span>Todos</span>
+            <span className="badge">{dateCounts.todos}</span>
+          </DateButton>
+        </DateFilterGroup>
+
+        <LiveControl $isMuted={isMuted}>
+          <div className="live-pill" title="Atualização contínua automática a cada 5 segundos">
+            <span className="dot" />
+            <span>Ao Vivo</span>
+          </div>
+
+          <button
+            type="button"
+            className="sound-btn"
+            onClick={toggleSound}
+            title={isMuted ? 'Clique para ativar a campainha' : 'Clique para silenciar'}
+          >
+            {isMuted ? <SpeakerSlash size={16} /> : <SpeakerHigh size={16} />}
+            <span>{isMuted ? 'Mudo' : 'Som Ativo'}</span>
+          </button>
+        </LiveControl>
+      </Toolbar>
+
+      {/* Filtro por Status do Pedido */}
       <Filter>
         {orderStatusOptions.map((status) => {
           const count = getStatusCount(status.value);
           return (
             <FilterOptions
               key={status.id}
-              onClick={() => handleStatus(status)}
+              onClick={() => setActiveStatus(status.id)}
               $isActiveStatus={activeStatus === status.id}
             >
               <span>{status.label}</span>
@@ -120,60 +376,125 @@ export function Orders() {
         })}
       </Filter>
 
-      <TableWrapper>
-        <TableContainer
-          component={Paper}
-          sx={{
-            backgroundColor: '#1E293B',
-            color: '#FFFFFF',
-            borderRadius: '16px',
-            border: '1px solid #334155',
-            boxShadow: '0 8px 24px rgba(0, 0, 0, 0.3)',
-          }}
-        >
-          <Table aria-label="tabela de pedidos">
-            <TableHead sx={{ backgroundColor: '#111827' }}>
-              <TableRow>
-                <TableCell sx={{ color: '#94A3B8', fontWeight: 700 }} />
-                <TableCell sx={{ color: '#94A3B8', fontWeight: 700 }}>
-                  Código do Pedido
-                </TableCell>
-                <TableCell sx={{ color: '#94A3B8', fontWeight: 700 }}>
-                  Cliente
-                </TableCell>
-                <TableCell sx={{ color: '#94A3B8', fontWeight: 700 }}>
-                  Data e Hora
-                </TableCell>
-                <TableCell sx={{ color: '#94A3B8', fontWeight: 700 }}>
-                  Status Atual
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {rows.length > 0 ? (
-                rows.map((row) => (
-                  <Row
-                    key={row.orderId}
-                    row={row}
-                    orders={orders}
-                    setOrders={setOrders}
-                  />
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell
-                    colSpan={5}
-                    sx={{ color: '#94A3B8', textAlign: 'center', py: 6 }}
+      {/* Listagem Agrupada por Dias (Accordion) */}
+      {groupedOrders.length === 0 ? (
+        <TableWrapper>
+          <TableContainer
+            component={Paper}
+            sx={{
+              backgroundColor: '#1E293B',
+              color: '#FFFFFF',
+              borderRadius: '16px',
+              border: '1px solid #334155',
+              padding: '48px 24px',
+              textAlign: 'center',
+            }}
+          >
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
+              <CalendarCheck size={44} color="#64748B" weight="duotone" />
+              <h3 style={{ color: '#F1F5F9', fontSize: '18px', fontWeight: 700 }}>
+                Nenhum pedido encontrado neste período
+              </h3>
+              <p style={{ color: '#94A3B8', fontSize: '14px', maxWidth: '400px' }}>
+                Tente selecionar outro período acima ou clique em <strong>Todos</strong> para ver os pedidos anteriores.
+              </p>
+            </div>
+          </TableContainer>
+        </TableWrapper>
+      ) : (
+        groupedOrders.map((group) => {
+          const dayMeta = getDayHeaderInfo(group.key);
+          const isOpen = openDays[group.key] !== false;
+
+          const dayTotalRevenue = group.orders.reduce((acc, order) => {
+            const sub = (order.products || []).reduce(
+              (s, p) => s + (p.price || 0) * (p.quantity || 1),
+              0,
+            );
+            return acc + sub;
+          }, 0);
+
+          return (
+            <DayGroup key={group.key}>
+              <DayGroupHeader
+                $isOpen={isOpen}
+                $isToday={dayMeta.isToday}
+                onClick={() => toggleDay(group.key)}
+              >
+                <div className="left-meta">
+                  <span className="day-title">
+                    <CalendarBlank size={20} weight="duotone" />
+                    {dayMeta.title}
+                    <span style={{ fontSize: '13px', fontWeight: 500, color: '#94A3B8' }}>
+                      ({dayMeta.formattedDate})
+                    </span>
+                  </span>
+                  {dayMeta.isToday && <span className="today-tag">Hoje</span>}
+                </div>
+
+                <div className="right-meta">
+                  <span className="stats-pill">
+                    {group.orders.length} {group.orders.length === 1 ? 'pedido' : 'pedidos'}
+                  </span>
+
+                  <span className="stats-pill">
+                    Total: <strong>{formatPrice(dayTotalRevenue)}</strong>
+                  </span>
+
+                  <span className="toggle-arrow">
+                    <CaretDown size={18} weight="bold" />
+                  </span>
+                </div>
+              </DayGroupHeader>
+
+              {isOpen && (
+                <TableWrapper>
+                  <TableContainer
+                    component={Paper}
+                    sx={{
+                      backgroundColor: 'transparent',
+                      color: '#FFFFFF',
+                      boxShadow: 'none',
+                    }}
                   >
-                    Nenhum pedido encontrado neste status.
-                  </TableCell>
-                </TableRow>
+                    <Table aria-label="tabela de pedidos">
+                      <TableHead sx={{ backgroundColor: '#111827' }}>
+                        <TableRow>
+                          <TableCell sx={{ color: '#94A3B8', fontWeight: 700, width: '40px' }} />
+                          <TableCell sx={{ color: '#94A3B8', fontWeight: 700 }}>
+                            Código do Pedido
+                          </TableCell>
+                          <TableCell sx={{ color: '#94A3B8', fontWeight: 700 }}>
+                            Cliente
+                          </TableCell>
+                          <TableCell sx={{ color: '#94A3B8', fontWeight: 700 }}>
+                            Horário
+                          </TableCell>
+                          <TableCell sx={{ color: '#94A3B8', fontWeight: 700 }}>
+                            Status Atual
+                          </TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {group.orders.map((order) => (
+                          <Row
+                            key={order._id || order.id}
+                            row={createData(order)}
+                            orders={orders}
+                            setOrders={setOrders}
+                          />
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </TableWrapper>
               )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </TableWrapper>
+            </DayGroup>
+          );
+        })
+      )}
     </Container>
   );
 }
 
+export default Orders;
