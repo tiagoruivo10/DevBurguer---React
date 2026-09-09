@@ -8,6 +8,7 @@ import { ThemeProvider } from 'styled-components';
 
 import stripePromise from './config/stripeConfig';
 import AppProvider from './hooks';
+import { ScrollToTop } from './components';
 import { Router } from './routes';
 import GlobalStyles from './styles/globalStyles';
 import { standardTheme } from './styles/themes/standard';
@@ -18,6 +19,7 @@ createRoot(document.getElementById('root')).render(
       <AppProvider>
         <Elements stripe={stripePromise}>
           <BrowserRouter>
+            <ScrollToTop />
             <Router />
           </BrowserRouter>
         </Elements>

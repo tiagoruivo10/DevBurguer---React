@@ -17,3 +17,4 @@ export * from './RestaurantInfo';
 export * from './WhatsAppButton';
 export * from './ProductModal';
 export * from './ChipsInput';
+export * from './ScrollToTop';
