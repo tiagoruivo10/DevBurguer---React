@@ -15,6 +15,7 @@ import PropTypes from 'prop-types';
 import { api } from '../../../services/api';
 import { formatDate } from '../../../utils/formatDate';
 import { formatPrice } from '../../../utils/formatPrice';
+import { formatImageUrl } from '../../../utils/formatImageUrl';
 import { orderStatusOptions } from './OrderStatus';
 import { ProductImage, SelectStatus, selectStatusStyles } from './styles';
 
@@ -114,7 +115,14 @@ export function Row({ row, setOrders, orders }) {
                   {row.products.map((product) => (
                     <TableRow key={product.id} sx={{ '&:last-child td': { border: 0 } }}>
                       <TableCell sx={{ width: '60px' }}>
-                        <ProductImage src={product.url} alt={product.name} />
+                        <ProductImage
+                          src={formatImageUrl(product.url)}
+                          alt={product.name}
+                          onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=150&q=80';
+                          }}
+                        />
                       </TableCell>
                       <TableCell sx={{ color: '#FFFFFF', fontWeight: 600 }}>
                         {product.name}

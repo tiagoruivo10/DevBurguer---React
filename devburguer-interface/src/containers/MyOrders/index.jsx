@@ -19,6 +19,7 @@ import { useUser } from '../../hooks/UserContext';
 import { api } from '../../services/api';
 import { formatDate } from '../../utils/formatDate';
 import { formatPrice } from '../../utils/formatPrice';
+import { formatImageUrl } from '../../utils/formatImageUrl';
 import {
   Container,
   Content,
@@ -274,7 +275,14 @@ export function MyOrders() {
                   {(order.products || []).map((prod) => (
                     <div className="item-row" key={prod.id}>
                       <div className="item-info">
-                        <img src={prod.url} alt={prod.name} />
+                        <img
+                          src={formatImageUrl(prod.url)}
+                          alt={prod.name}
+                          onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=150&q=80';
+                          }}
+                        />
                         <div>
                           <div className="name">{prod.name}</div>
                           <div className="category">{prod.category}</div>
