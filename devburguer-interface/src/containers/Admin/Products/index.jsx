@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import {
   CheckCircle,
   PencilSimple,
   Plus,
+  Trash,
   XCircle,
   List,
   MagnifyingGlass,
@@ -18,9 +20,12 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 
 import { api } from '../../../services/api';
+import { ConfirmDeleteModal } from '../../../components/ConfirmDeleteModal';
 import { formatPrice } from '../../../utils/formatPrice';
 import {
+  ActionButtons,
   Container,
+  DeleteButton,
   ProductImage,
   EditButton,
   HeaderContainer,
@@ -32,7 +37,29 @@ import {
 export function Products() {
   const [products, setProducts] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [productToDelete, setProductToDelete] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
   const navigate = useNavigate();
+
+  async function handleDeleteProduct() {
+    if (!productToDelete) return;
+
+    try {
+      setIsDeleting(true);
+      await toast.promise(api.delete(`/products/${productToDelete.id}`), {
+        pending: 'Excluindo produto do cardápio...',
+        success: 'Produto excluído com sucesso! 🗑️',
+        error: 'Falha ao excluir produto, tente novamente.',
+      });
+
+      setProducts((prev) => prev.filter((p) => p.id !== productToDelete.id));
+      setProductToDelete(null);
+    } catch {
+      // Toast already notifies error
+    } finally {
+      setIsDeleting(false);
+    }
+  }
 
   useEffect(() => {
     async function loadProducts() {
@@ -148,13 +175,22 @@ export function Products() {
                   </TableCell>
                   <TableCell align="center">{isOffer(product.offer)}</TableCell>
                   <TableCell align="center">
-                    <EditButton
-                      type="button"
-                      onClick={() => editProduct(product)}
-                      title="Editar Produto"
-                    >
-                      <PencilSimple size={18} weight="bold" />
-                    </EditButton>
+                    <ActionButtons>
+                      <EditButton
+                        type="button"
+                        onClick={() => editProduct(product)}
+                        title="Editar Produto"
+                      >
+                        <PencilSimple size={18} weight="bold" />
+                      </EditButton>
+                      <DeleteButton
+                        type="button"
+                        onClick={() => setProductToDelete(product)}
+                        title="Excluir Produto"
+                      >
+                        <Trash size={18} weight="bold" />
+                      </DeleteButton>
+                    </ActionButtons>
                   </TableCell>
                 </TableRow>
               ))
@@ -171,6 +207,14 @@ export function Products() {
           </TableBody>
         </Table>
       </TableContainer>
+
+      <ConfirmDeleteModal
+        isOpen={Boolean(productToDelete)}
+        onClose={() => setProductToDelete(null)}
+        onConfirm={handleDeleteProduct}
+        productName={productToDelete?.name}
+        isLoading={isDeleting}
+      />
     </Container>
   );
 }

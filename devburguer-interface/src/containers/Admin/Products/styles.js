@@ -110,22 +110,49 @@ export const OfferBadge = styled.span`
       props.$isOffer ? 'rgba(16, 185, 129, 0.3)' : 'rgba(148, 163, 184, 0.2)'};
 `;
 
+export const ActionButtons = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+`;
+
 export const EditButton = styled.button`
   border: 0;
   background-color: rgba(255, 255, 255, 0.08);
   height: 36px;
   width: 36px;
   border-radius: 10px;
-  margin: 0 auto;
   color: ${(props) => props.theme.lightGray};
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
   transition: all 0.2s ease;
 
   &:hover {
     background-color: ${(props) => props.theme.orange};
     color: ${(props) => props.theme.white};
+    transform: scale(1.1);
+  }
+`;
+
+export const DeleteButton = styled.button`
+  border: 0;
+  background-color: rgba(239, 68, 68, 0.12);
+  height: 36px;
+  width: 36px;
+  border-radius: 10px;
+  color: #ef4444;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: #ef4444;
+    color: #ffffff;
     transform: scale(1.1);
   }
 `;

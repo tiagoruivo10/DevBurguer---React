@@ -18,3 +18,4 @@ export * from './WhatsAppButton';
 export * from './ProductModal';
 export * from './ChipsInput';
 export * from './ScrollToTop';
+export * from './ConfirmDeleteModal';

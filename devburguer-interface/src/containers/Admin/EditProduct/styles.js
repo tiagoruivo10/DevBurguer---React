@@ -248,8 +248,53 @@ export const selectStyles = {
 export const Select = styled(ReactSelect)``;
 
 
-export const SubmitButton = styled(Button)`
+export const ButtonGroup = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 16px;
   margin-top: 16px;
+
+  @media (max-width: 600px) {
+    flex-direction: column-reverse;
+  }
+`;
+
+export const SubmitButton = styled(Button)`
+  flex: 2;
+  width: 100%;
+  margin-top: 0;
+`;
+
+export const DeleteProductButton = styled.button`
+  flex: 1;
+  width: 100%;
+  height: 52px;
+  border-radius: 12px;
+  background-color: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  color: #ef4444;
+  font-size: 15px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover:not(:disabled) {
+    background-color: #ef4444;
+    color: #ffffff;
+    border-color: #ef4444;
+    box-shadow: 0 4px 14px rgba(239, 68, 68, 0.4);
+    transform: translateY(-1px);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 `;
 
 export const ErrorMessage = styled.span`

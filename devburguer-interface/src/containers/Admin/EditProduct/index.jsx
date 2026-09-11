@@ -12,6 +12,7 @@ import {
   Article,
   ListChecks,
   MinusCircle,
+  Trash,
 } from '@phosphor-icons/react';
 
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -19,11 +20,14 @@ import * as yup from 'yup';
 
 import { api } from '../../../services/api';
 import { ChipsInput } from '../../../components/ChipsInput';
+import { ConfirmDeleteModal } from '../../../components/ConfirmDeleteModal';
 import { getProductDetails } from '../../../data/productsInfo';
 import {
   BackButton,
+  ButtonGroup,
   Container,
   ContainerCheckbox,
+  DeleteProductButton,
   ErrorMessage,
   FormCard,
   HeaderContainer,
@@ -58,6 +62,8 @@ export function EditProduct() {
   const [previewUrl, setPreviewUrl] = useState(null);
   const [categories, setCategories] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -143,6 +149,26 @@ export function EditProduct() {
       // Toast handles error message
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleDeleteProduct = async () => {
+    try {
+      setIsDeleting(true);
+      await toast.promise(api.delete(`/products/${product.id}`), {
+        pending: 'Excluindo produto do cardápio...',
+        success: 'Produto excluído com sucesso! 🗑️',
+        error: 'Falha ao excluir produto, tente novamente.',
+      });
+
+      setIsDeleteModalOpen(false);
+      setTimeout(() => {
+        navigate('/admin/produtos');
+      }, 1000);
+    } catch {
+      // Toast already handles error feedback
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -289,11 +315,30 @@ export function EditProduct() {
           </label>
         </ContainerCheckbox>
 
-        <SubmitButton type="submit" disabled={isLoading}>
-          <CheckCircle size={20} weight="bold" />
-          {isLoading ? 'Salvando Alterações...' : 'Atualizar Dados do Produto'}
-        </SubmitButton>
+        <ButtonGroup>
+          <SubmitButton type="submit" disabled={isLoading || isDeleting}>
+            <CheckCircle size={20} weight="bold" />
+            {isLoading ? 'Salvando Alterações...' : 'Atualizar Dados do Produto'}
+          </SubmitButton>
+
+          <DeleteProductButton
+            type="button"
+            onClick={() => setIsDeleteModalOpen(true)}
+            disabled={isLoading || isDeleting}
+          >
+            <Trash size={20} weight="bold" />
+            Excluir Produto
+          </DeleteProductButton>
+        </ButtonGroup>
       </FormCard>
+
+      <ConfirmDeleteModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={handleDeleteProduct}
+        productName={product.name}
+        isLoading={isDeleting}
+      />
     </Container>
   );
 }
