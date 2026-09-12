@@ -34,6 +34,23 @@ export const Container = styled.section`
   .react-multiple-carousel__arrow--right {
     right: -10px;
   }
+
+  @media (max-width: 768px) {
+    padding: 0 16px;
+    margin-bottom: 32px;
+
+    .carousel-item {
+      padding: 6px;
+    }
+
+    .react-multiple-carousel__arrow--left {
+      left: 0;
+    }
+
+    .react-multiple-carousel__arrow--right {
+      right: 0;
+    }
+  }
 `;
 
 export const Title = styled.h2`
@@ -53,6 +70,15 @@ export const Title = styled.h2`
     height: 28px;
     background: linear-gradient(to bottom, ${(props) => props.theme.orange}, #ea580c);
     border-radius: 4px;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 22px;
+    margin-bottom: 16px;
+
+    &::before {
+      height: 22px;
+    }
   }
 `;
 

@@ -18,6 +18,10 @@ export const ItemCard = styled.div`
   transition: all 0.2s ease;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
 
+  @media (max-width: 580px) {
+    padding: 14px;
+  }
+
   &:hover {
     border-color: rgba(255, 107, 0, 0.3);
   }
@@ -28,6 +32,12 @@ export const ItemCard = styled.div`
     justify-content: space-between;
     gap: 16px;
     flex-wrap: wrap;
+
+    @media (max-width: 580px) {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 12px;
+    }
   }
 
   .product-info {
@@ -37,6 +47,11 @@ export const ItemCard = styled.div`
     flex: 1;
     min-width: 220px;
 
+    @media (max-width: 580px) {
+      min-width: 0;
+      width: 100%;
+    }
+
     .product-thumb {
       width: 64px;
       height: 64px;
@@ -45,6 +60,11 @@ export const ItemCard = styled.div`
       background-color: ${(props) => props.theme.mainBlack};
       border: 1px solid rgba(255, 255, 255, 0.08);
       flex-shrink: 0;
+
+      @media (max-width: 580px) {
+        width: 56px;
+        height: 56px;
+      }
     }
 
     .details {
@@ -71,6 +91,14 @@ export const ItemCard = styled.div`
     align-items: center;
     gap: 20px;
     flex-wrap: wrap;
+
+    @media (max-width: 580px) {
+      width: 100%;
+      justify-content: space-between;
+      gap: 12px;
+      padding-top: 8px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
   }
 `;
 

@@ -17,6 +17,17 @@ export const Banner = styled.section`
   align-items: center;
   padding: 60px 32px;
   border-bottom: 1px solid ${(props) => props.theme.darkGray};
+
+  @media (max-width: 768px) {
+    min-height: 420px;
+    padding: 40px 20px;
+  }
+
+  @media (max-width: 480px) {
+    min-height: 360px;
+    padding: 32px 16px;
+    background-position: center;
+  }
 `;
 
 export const BannerContent = styled.div`
@@ -40,6 +51,12 @@ export const BannerContent = styled.div`
     font-size: 13px;
     font-weight: 700;
     margin-bottom: 18px;
+
+    @media (max-width: 480px) {
+      font-size: 11px;
+      padding: 5px 12px;
+      margin-bottom: 14px;
+    }
   }
 
   h1 {
@@ -56,7 +73,12 @@ export const BannerContent = styled.div`
     }
 
     @media (max-width: 768px) {
-      font-size: 34px;
+      font-size: 32px;
+    }
+
+    @media (max-width: 480px) {
+      font-size: 26px;
+      line-height: 1.2;
     }
   }
 
@@ -66,6 +88,11 @@ export const BannerContent = styled.div`
     line-height: 1.6;
     margin-bottom: 32px;
     max-width: 540px;
+
+    @media (max-width: 768px) {
+      font-size: 14px;
+      margin-bottom: 24px;
+    }
   }
 `;
 
@@ -92,6 +119,13 @@ export const HeroButton = styled.button`
   &:active {
     transform: translateY(0);
   }
+
+  @media (max-width: 480px) {
+    width: 100%;
+    justify-content: center;
+    padding: 14px 20px;
+    font-size: 15px;
+  }
 `;
 
 export const FeaturesBar = styled.section`
@@ -103,6 +137,13 @@ export const FeaturesBar = styled.section`
   gap: 20px;
   position: relative;
   z-index: 10;
+
+  @media (max-width: 768px) {
+    margin: 20px auto 36px;
+    padding: 0 16px;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
 `;
 
 export const FeatureItem = styled.div`

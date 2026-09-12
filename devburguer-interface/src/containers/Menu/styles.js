@@ -19,6 +19,11 @@ export const Banner = styled.section`
     url(${BannerHamburguer}) center/cover no-repeat;
   border-bottom: 1px solid ${(props) => props.theme.darkGray};
   padding: 0 24px;
+
+  @media (max-width: 640px) {
+    height: 240px;
+    padding: 0 16px;
+  }
 `;
 
 export const BannerContent = styled.div`
@@ -37,6 +42,11 @@ export const BannerContent = styled.div`
     font-size: 13px;
     font-weight: 700;
     margin-bottom: 12px;
+
+    @media (max-width: 640px) {
+      font-size: 11px;
+      padding: 4px 10px;
+    }
   }
 
   h1 {
@@ -45,11 +55,19 @@ export const BannerContent = styled.div`
     color: ${(props) => props.theme.white};
     letter-spacing: -0.5px;
     margin-bottom: 8px;
+
+    @media (max-width: 640px) {
+      font-size: 26px;
+    }
   }
 
   p {
     font-size: 15px;
     color: ${(props) => props.theme.lightGray};
+
+    @media (max-width: 640px) {
+      font-size: 13px;
+    }
   }
 `;
 
@@ -80,7 +98,7 @@ export const ReturnButton = styled.button`
   @media (max-width: 640px) {
     top: 16px;
     left: 16px;
-    padding: 8px 12px;
+    padding: 7px 12px;
     font-size: 12px;
   }
 `;
@@ -91,6 +109,11 @@ export const SearchContainer = styled.div`
   padding: 0 24px;
   position: relative;
   z-index: 10;
+
+  @media (max-width: 640px) {
+    margin: -20px auto 24px;
+    padding: 0 16px;
+  }
 
   .search-box {
     display: flex;
@@ -104,6 +127,10 @@ export const SearchContainer = styled.div`
     color: ${(props) => props.theme.orange};
     transition: all 0.2s ease;
 
+    @media (max-width: 640px) {
+      padding: 11px 16px;
+    }
+
     &:focus-within {
       border-color: ${(props) => props.theme.orange};
       box-shadow: 0 0 16px rgba(255, 107, 0, 0.25);
@@ -116,6 +143,10 @@ export const SearchContainer = styled.div`
       color: ${(props) => props.theme.white};
       font-size: 15px;
       font-weight: 500;
+
+      @media (max-width: 640px) {
+        font-size: 14px;
+      }
 
       &::placeholder {
         color: ${(props) => props.theme.lightGray};
@@ -132,6 +163,21 @@ export const CategoryMenu = styled.div`
   max-width: 1280px;
   margin: 0 auto 36px;
   padding: 0 24px;
+
+  @media (max-width: 768px) {
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 0 16px 10px 16px;
+    gap: 8px;
+    margin-bottom: 24px;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
 `;
 
 export const CategoryButton = styled.button`
@@ -160,6 +206,13 @@ export const CategoryButton = styled.button`
       : '0 2px 8px rgba(0, 0, 0, 0.2)'};
   transition: all 0.2s ease;
 
+  @media (max-width: 768px) {
+    padding: 8px 16px;
+    font-size: 13px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
   &:hover {
     color: ${(props) => props.theme.white};
     border-color: ${(props) => props.theme.orange};
@@ -175,6 +228,12 @@ export const ProductsContainer = styled.div`
   max-width: 1280px;
   margin: 0 auto;
   padding: 0 24px;
+
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+    gap: 18px;
+    padding: 0 16px;
+  }
 `;
 
 export const EmptyState = styled.div`

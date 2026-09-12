@@ -14,6 +14,10 @@ export const Container = styled.div`
   min-height: calc(100vh - 76px);
   background-color: ${(props) => props.theme.mainBlack};
   padding: 40px 24px 80px 24px;
+
+  @media (max-width: 640px) {
+    padding: 20px 14px 60px 14px;
+  }
 `;
 
 export const Content = styled.div`
@@ -22,6 +26,10 @@ export const Content = styled.div`
   display: flex;
   flex-direction: column;
   gap: 28px;
+
+  @media (max-width: 640px) {
+    gap: 20px;
+  }
 `;
 
 export const Header = styled.div`
@@ -51,6 +59,10 @@ export const Header = styled.div`
     color: ${(props) => props.theme.white};
     letter-spacing: -0.5px;
 
+    @media (max-width: 640px) {
+      font-size: 26px;
+    }
+
     span {
       color: ${(props) => props.theme.orange};
     }
@@ -59,6 +71,10 @@ export const Header = styled.div`
   p {
     font-size: 15px;
     color: ${(props) => props.theme.lightGray};
+
+    @media (max-width: 640px) {
+      font-size: 13px;
+    }
   }
 `;
 
@@ -173,9 +189,17 @@ export const StepperTrack = styled.div`
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 
   @media (max-width: 640px) {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: flex;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 18px 16px;
     gap: 16px;
+    justify-content: flex-start;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
 `;
 
@@ -188,6 +212,10 @@ export const StepItem = styled.div`
   position: relative;
   z-index: 2;
   flex: 1;
+
+  @media (max-width: 640px) {
+    flex: 0 0 85px;
+  }
 
   .step-icon {
     width: 44px;
@@ -212,6 +240,12 @@ export const StepItem = styled.div`
           ? props.theme.orange
           : props.theme.darkGray};
     animation: ${(props) => (props.$isActive ? pulseGlow : 'none')} 2s infinite;
+
+    @media (max-width: 640px) {
+      width: 38px;
+      height: 38px;
+      font-size: 15px;
+    }
   }
 
   .step-label {
@@ -221,6 +255,11 @@ export const StepItem = styled.div`
       props.$isActive || props.$isCompleted
         ? props.theme.white
         : props.theme.lightGray};
+
+    @media (max-width: 640px) {
+      font-size: 11px;
+      line-height: 1.2;
+    }
   }
 `;
 
@@ -229,6 +268,11 @@ export const OrderItemsList = styled.div`
   display: flex;
   flex-direction: column;
   gap: 14px;
+
+  @media (max-width: 640px) {
+    padding: 16px;
+    gap: 12px;
+  }
 
   .item-row {
     display: flex;
@@ -254,12 +298,21 @@ export const OrderItemsList = styled.div`
         border-radius: 10px;
         object-fit: cover;
         background-color: rgba(255, 255, 255, 0.05);
+
+        @media (max-width: 640px) {
+          width: 44px;
+          height: 44px;
+        }
       }
 
       .name {
         font-size: 14px;
         font-weight: 700;
         color: ${(props) => props.theme.white};
+
+        @media (max-width: 640px) {
+          font-size: 13px;
+        }
       }
 
       .category {
@@ -273,6 +326,7 @@ export const OrderItemsList = styled.div`
       font-weight: 800;
       color: ${(props) => props.theme.white};
       text-align: right;
+      flex-shrink: 0;
 
       .qtd {
         font-size: 12px;
@@ -293,10 +347,23 @@ export const OrderCardFooter = styled.div`
   gap: 16px;
   border-top: 1px solid rgba(255, 255, 255, 0.06);
 
+  @media (max-width: 640px) {
+    padding: 16px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+  }
+
   .total-block {
     display: flex;
     flex-direction: column;
     gap: 2px;
+
+    @media (max-width: 640px) {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+    }
 
     span {
       font-size: 12px;
@@ -315,6 +382,12 @@ export const OrderCardFooter = styled.div`
     align-items: center;
     gap: 12px;
 
+    @media (max-width: 640px) {
+      flex-direction: column;
+      width: 100%;
+      gap: 10px;
+    }
+
     .btn-help {
       display: inline-flex;
       align-items: center;
@@ -328,6 +401,12 @@ export const OrderCardFooter = styled.div`
       font-weight: 700;
       text-decoration: none;
       transition: all 0.2s ease;
+
+      @media (max-width: 640px) {
+        width: 100%;
+        justify-content: center;
+        padding: 12px;
+      }
 
       &:hover {
         background-color: #22c55e;
@@ -349,6 +428,12 @@ export const OrderCardFooter = styled.div`
       cursor: pointer;
       transition: all 0.2s ease;
       box-shadow: 0 4px 12px rgba(255, 107, 0, 0.3);
+
+      @media (max-width: 640px) {
+        width: 100%;
+        justify-content: center;
+        padding: 12px;
+      }
 
       &:hover {
         transform: translateY(-1px);

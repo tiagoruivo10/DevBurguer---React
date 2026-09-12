@@ -5,7 +5,7 @@ export const Container = styled.header`
   position: sticky;
   top: 0;
   z-index: 1000;
-  background-color: rgba(11, 15, 23, 0.85);
+  background-color: rgba(11, 15, 23, 0.92);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid ${(props) => props.theme.darkGray};
@@ -13,6 +13,11 @@ export const Container = styled.header`
   height: 76px;
   padding: 0 32px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+
+  @media (max-width: 900px) {
+    padding: 0 16px;
+    height: 68px;
+  }
 `;
 
 export const Content = styled.div`
@@ -42,6 +47,11 @@ export const Brand = styled(Link)`
   &:hover {
     transform: scale(1.02);
   }
+
+  @media (max-width: 900px) {
+    font-size: 20px;
+    margin-right: 0;
+  }
 `;
 
 export const Navigation = styled.nav`
@@ -53,6 +63,10 @@ export const Navigation = styled.nav`
     display: flex;
     align-items: center;
     gap: 16px;
+
+    @media (max-width: 900px) {
+      display: none;
+    }
   }
 `;
 
@@ -109,6 +123,10 @@ export const Options = styled.div`
   display: flex;
   align-items: center;
   gap: 24px;
+
+  @media (max-width: 900px) {
+    display: none;
+  }
 `;
 
 export const Profile = styled.div`
@@ -188,9 +206,220 @@ export const Logout = styled.button`
   display: block;
   text-align: left;
   margin-top: 2px;
+  cursor: pointer;
 
   &:hover {
     text-decoration: underline;
   }
 `;
+
+/* ===== COMPONENTES MOBILE ===== */
+export const MobileActions = styled.div`
+  display: none;
+  align-items: center;
+  gap: 10px;
+
+  @media (max-width: 900px) {
+    display: flex;
+  }
+`;
+
+export const MobileCartButton = styled(Link)`
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background-color: ${(props) => props.theme.secondBlack};
+  border: 1px solid ${(props) => props.theme.darkGray};
+  color: ${(props) => props.theme.orange};
+  transition: all 0.2s ease;
+
+  &:hover,
+  &:active {
+    border-color: ${(props) => props.theme.orange};
+    transform: scale(1.05);
+  }
+`;
+
+export const HamburgerButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background-color: ${(props) =>
+    props.$isOpen ? props.theme.orange : props.theme.secondBlack};
+  border: 1px solid
+    ${(props) => (props.$isOpen ? props.theme.orange : props.theme.darkGray)};
+  color: ${(props) => props.theme.white};
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: ${(props) => props.theme.orange};
+    color: ${(props) => (props.$isOpen ? props.theme.white : props.theme.orange)};
+  }
+`;
+
+export const MobileOverlay = styled.div`
+  position: fixed;
+  inset: 0;
+  top: 68px;
+  background-color: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+  z-index: 998;
+  opacity: ${(props) => (props.$isOpen ? 1 : 0)};
+  visibility: ${(props) => (props.$isOpen ? 'visible' : 'hidden')};
+  transition: all 0.25s ease-in-out;
+`;
+
+export const MobileDrawer = styled.div`
+  position: fixed;
+  top: 68px;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  max-width: 320px;
+  background-color: #0d131f;
+  border-left: 1px solid ${(props) => props.theme.cardBorder || props.theme.darkGray};
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  gap: 18px;
+  overflow-y: auto;
+  box-shadow: -8px 0 30px rgba(0, 0, 0, 0.8);
+  transform: ${(props) =>
+    props.$isOpen ? 'translateX(0)' : 'translateX(100%)'};
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+`;
+
+export const DrawerProfile = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background-color: rgba(30, 41, 59, 0.6);
+  border: 1px solid ${(props) => props.theme.darkGray};
+  border-radius: 16px;
+
+  .info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    overflow: hidden;
+
+    .name {
+      font-size: 15px;
+      font-weight: 700;
+      color: ${(props) => props.theme.white};
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+
+    .role {
+      font-size: 12px;
+      color: ${(props) => props.theme.orange};
+      font-weight: 600;
+    }
+  }
+
+  .login-prompt {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+
+    span {
+      font-size: 14px;
+      font-weight: 700;
+      color: ${(props) => props.theme.white};
+    }
+  }
+`;
+
+export const DrawerNav = styled.nav`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+`;
+
+export const DrawerLink = styled(Link)`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 16px;
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  color: ${(props) => (props.$isActive ? props.theme.orange : props.theme.white)};
+  background-color: ${(props) =>
+    props.$isActive ? 'rgba(255, 107, 0, 0.12)' : 'transparent'};
+  border: 1px solid
+    ${(props) => (props.$isActive ? 'rgba(255, 107, 0, 0.3)' : 'transparent')};
+  transition: all 0.2s ease;
+
+  svg {
+    color: ${(props) =>
+      props.$isActive ? props.theme.orange : props.theme.lightGray};
+    flex-shrink: 0;
+  }
+
+  .badge-count {
+    margin-left: auto;
+    background-color: ${(props) => props.theme.orange};
+    color: ${(props) => props.theme.white};
+    font-size: 11px;
+    font-weight: 800;
+    padding: 2px 8px;
+    border-radius: 12px;
+  }
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: ${(props) => props.theme.orange};
+
+    svg {
+      color: ${(props) => props.theme.orange};
+    }
+  }
+`;
+
+export const DrawerFooter = styled.div`
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+`;
+
+export const DrawerLogoutButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  background-color: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #ef4444;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: #ef4444;
+    color: #ffffff;
+  }
+`;
+
 

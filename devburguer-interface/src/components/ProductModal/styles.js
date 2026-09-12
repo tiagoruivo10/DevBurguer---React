@@ -31,6 +31,10 @@ export const Overlay = styled.div`
   justify-content: center;
   padding: 16px;
   animation: ${fadeIn} 0.2s ease-out;
+
+  @media (max-width: 640px) {
+    padding: 8px;
+  }
 `;
 
 export const ModalCard = styled.div`
@@ -46,6 +50,11 @@ export const ModalCard = styled.div`
   overflow: hidden;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 30px rgba(255, 107, 0, 0.15);
   animation: ${scaleUp} 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+
+  @media (max-width: 640px) {
+    max-height: 94vh;
+    border-radius: 20px;
+  }
 `;
 
 export const CloseButton = styled.button`
@@ -126,6 +135,10 @@ export const ImageBanner = styled.div`
       border: 1px solid rgba(16, 185, 129, 0.6);
       color: #34d399;
     }
+  }
+
+  @media (max-width: 640px) {
+    height: 180px;
   }
 `;
 
@@ -364,6 +377,28 @@ export const ContentBody = styled.div`
       }
     }
   }
+
+  @media (max-width: 640px) {
+    padding: 16px 16px;
+    gap: 16px;
+
+    .header-info {
+      .titles h2 {
+        font-size: 20px;
+      }
+      .price-tag {
+        font-size: 20px;
+      }
+    }
+
+    .meat-options {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .ingredients-grid {
+      grid-template-columns: 1fr;
+    }
+  }
 `;
 
 export const FooterBar = styled.div`
@@ -441,6 +476,34 @@ export const FooterBar = styled.div`
 
     &:active {
       transform: translateY(0);
+    }
+  }
+
+  @media (max-width: 640px) {
+    padding: 12px 16px;
+    gap: 12px;
+
+    .add-cart-btn {
+      padding: 12px 16px;
+      font-size: 14px;
+    }
+  }
+
+  @media (max-width: 400px) {
+    .counter-group {
+      padding: 2px 6px;
+      button {
+        width: 28px;
+        height: 28px;
+      }
+      span {
+        font-size: 13px;
+        min-width: 18px;
+      }
+    }
+    .add-cart-btn {
+      font-size: 13px;
+      padding: 10px 12px;
     }
   }
 `;

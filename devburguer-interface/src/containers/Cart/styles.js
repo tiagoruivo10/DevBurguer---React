@@ -13,6 +13,10 @@ export const Banner = styled.section`
   border-bottom: 1px solid ${(props) => props.theme.darkGray};
   background: linear-gradient(180deg, rgba(30, 41, 59, 0.4) 0%, rgba(11, 15, 23, 1) 100%);
 
+  @media (max-width: 640px) {
+    padding: 28px 16px 20px;
+  }
+
   .badge {
     display: inline-flex;
     align-items: center;
@@ -25,12 +29,21 @@ export const Banner = styled.section`
     font-size: 13px;
     font-weight: 700;
     margin-bottom: 12px;
+
+    @media (max-width: 640px) {
+      font-size: 11px;
+      padding: 4px 10px;
+    }
   }
 
   p {
     color: ${(props) => props.theme.lightGray};
     font-size: 15px;
     margin-top: 8px;
+
+    @media (max-width: 640px) {
+      font-size: 13px;
+    }
   }
 `;
 
@@ -39,6 +52,10 @@ export const Title = styled.h1`
   font-weight: 900;
   color: ${(props) => props.theme.white};
   letter-spacing: -0.5px;
+
+  @media (max-width: 640px) {
+    font-size: 26px;
+  }
 `;
 
 export const Content = styled.div`
@@ -53,15 +70,22 @@ export const Content = styled.div`
 
   @media (max-width: 960px) {
     grid-template-columns: 1fr;
+    padding: 24px 16px;
+    gap: 24px;
   }
 
   .cart-items-wrapper {
-    overflow-x: auto;
+    width: 100%;
   }
 
   .cart-resume-wrapper {
     position: sticky;
     top: 96px;
+    width: 100%;
+
+    @media (max-width: 960px) {
+      position: static;
+    }
   }
 `;
 

@@ -13,10 +13,24 @@ const globalStyles = createGlobalStyle`
         -moz-osx-font-smoothing: grayscale;
     }
 
+    html {
+        overflow-x: hidden;
+        width: 100%;
+    }
+
     body {
         background-color: ${(props) => props.theme.mainBlack};
         color: ${(props) => props.theme.secondWhite};
         min-height: 100vh;
+        width: 100%;
+        overflow-x: hidden;
+    }
+
+    #root {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
         overflow-x: hidden;
     }
 

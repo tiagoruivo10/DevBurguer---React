@@ -8,6 +8,10 @@ export const Container = styled.footer`
   padding: 60px 24px 24px 24px;
   position: relative;
   overflow: hidden;
+
+  @media (max-width: 600px) {
+    padding: 36px 16px 20px 16px;
+  }
 `;
 
 export const FooterContent = styled.div`
