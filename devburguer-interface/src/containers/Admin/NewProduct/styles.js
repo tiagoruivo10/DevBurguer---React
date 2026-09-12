@@ -6,6 +6,11 @@ export const Container = styled.div`
   width: 100%;
   max-width: 680px;
   margin: 0 auto;
+  padding-bottom: 40px;
+
+  @media (max-width: 640px) {
+    padding: 0 4px 32px;
+  }
 `;
 
 export const HeaderContainer = styled.div`
@@ -18,7 +23,7 @@ export const HeaderContainer = styled.div`
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-top: 12px;
+    margin-top: 14px;
 
     svg {
       color: ${(props) => props.theme.orange};
@@ -32,27 +37,39 @@ export const HeaderContainer = styled.div`
   }
 
   @media (max-width: 640px) {
+    margin-bottom: 18px;
+
     h2 {
       font-size: 20px;
+      margin-top: 10px;
+    }
+
+    p {
+      font-size: 13px;
     }
   }
 `;
 
 export const BackButton = styled.button`
-  background: transparent;
-  border: none;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   color: ${(props) => props.theme.lightGray};
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-size: 14px;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 13px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
+  width: fit-content;
 
   &:hover {
+    background: rgba(255, 107, 0, 0.12);
+    border-color: ${(props) => props.theme.orange};
     color: ${(props) => props.theme.orange};
-    transform: translateX(-3px);
+    transform: translateX(-2px);
   }
 `;
 

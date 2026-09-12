@@ -20,6 +20,8 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 
 import { api } from '../../../services/api';
+import { formatDate } from '../../../utils/formatDate';
+import { formatImageUrl } from '../../../utils/formatImageUrl';
 import { formatPrice } from '../../../utils/formatPrice';
 import { playNewOrderSound } from '../../../utils/playOrderSound';
 import { orderStatusOptions } from './OrderStatus';
@@ -30,10 +32,16 @@ import {
   DateFilterGroup,
   DayGroup,
   DayGroupHeader,
+  DesktopTableWrapper,
   Filter,
   FilterOptions,
   HeaderContainer,
   LiveControl,
+  MobileOrderCard,
+  MobileOrdersContainer,
+  SelectStatus,
+  selectStatusStyles,
+  StatsGrid,
   TableWrapper,
   Toolbar,
 } from './styles';
@@ -97,8 +105,38 @@ export function Orders() {
   const [isMuted, setIsMuted] = useState(() => {
     return localStorage.getItem('devburguer:orders_muted') === 'true';
   });
+  const [expandedOrders, setExpandedOrders] = useState({});
+  const [updatingOrderId, setUpdatingOrderId] = useState(null);
 
   const ordersCountRef = useRef(null);
+
+  async function handleStatusChange(orderId, status) {
+    try {
+      setUpdatingOrderId(orderId);
+      await api.put(`orders/${orderId}`, { status });
+
+      setOrders((prev) =>
+        prev.map((order) =>
+          order._id === orderId || order.id === orderId
+            ? { ...order, status }
+            : order,
+        ),
+      );
+      toast.success('Status do pedido atualizado!');
+    } catch (err) {
+      console.error(err);
+      toast.error('Erro ao atualizar status do pedido.');
+    } finally {
+      setUpdatingOrderId(null);
+    }
+  }
+
+  function toggleOrderItems(orderId) {
+    setExpandedOrders((prev) => ({
+      ...prev,
+      [orderId]: !prev[orderId],
+    }));
+  }
 
   const toggleSound = () => {
     setIsMuted((prev) => {
@@ -283,17 +321,27 @@ export function Orders() {
           <p>Gerencie o fluxo de preparo e entrega em tempo real</p>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
-          <div className="total-badge">
-            <Clock size={18} />
-            <span>{filteredOrders.length} pedidos exibidos</span>
+        <StatsGrid>
+          <div className="stat-card">
+            <div className="icon-wrapper">
+              <Clock size={20} weight="bold" />
+            </div>
+            <div className="stat-info">
+              <span className="stat-label">Pedidos Exibidos</span>
+              <span className="stat-value">{filteredOrders.length}</span>
+            </div>
           </div>
 
-          <div className="total-badge" style={{ borderColor: 'rgba(255, 107, 0, 0.4)', color: '#FF6B00' }}>
-            <CurrencyCircleDollar size={18} />
-            <span>{formatPrice(totalRevenue)}</span>
+          <div className="stat-card highlight">
+            <div className="icon-wrapper green">
+              <CurrencyCircleDollar size={20} weight="bold" />
+            </div>
+            <div className="stat-info">
+              <span className="stat-label">Faturamento Total</span>
+              <span className="stat-value">{formatPrice(totalRevenue)}</span>
+            </div>
           </div>
-        </div>
+        </StatsGrid>
       </HeaderContainer>
 
       {/* Barra de Ferramentas: Filtros de Período + Indicador Ao Vivo + Som */}
@@ -448,46 +496,151 @@ export function Orders() {
               </DayGroupHeader>
 
               {isOpen && (
-                <TableWrapper>
-                  <TableContainer
-                    component={Paper}
-                    sx={{
-                      backgroundColor: 'transparent',
-                      color: '#FFFFFF',
-                      boxShadow: 'none',
-                    }}
-                  >
-                    <Table aria-label="tabela de pedidos" sx={{ minWidth: 620 }}>
-                      <TableHead sx={{ backgroundColor: '#111827' }}>
-                        <TableRow>
-                          <TableCell sx={{ color: '#94A3B8', fontWeight: 700, width: '40px' }} />
-                          <TableCell sx={{ color: '#94A3B8', fontWeight: 700 }}>
-                            Código do Pedido
-                          </TableCell>
-                          <TableCell sx={{ color: '#94A3B8', fontWeight: 700 }}>
-                            Cliente
-                          </TableCell>
-                          <TableCell sx={{ color: '#94A3B8', fontWeight: 700 }}>
-                            Horário
-                          </TableCell>
-                          <TableCell sx={{ color: '#94A3B8', fontWeight: 700 }}>
-                            Status Atual
-                          </TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {group.orders.map((order) => (
-                          <Row
-                            key={order._id || order.id}
-                            row={createData(order)}
-                            orders={orders}
-                            setOrders={setOrders}
-                          />
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
-                </TableWrapper>
+                <>
+                  <DesktopTableWrapper>
+                    <TableContainer
+                      component={Paper}
+                      sx={{
+                        backgroundColor: 'transparent',
+                        color: '#FFFFFF',
+                        boxShadow: 'none',
+                      }}
+                    >
+                      <Table aria-label="tabela de pedidos" sx={{ minWidth: 620 }}>
+                        <TableHead sx={{ backgroundColor: '#111827' }}>
+                          <TableRow>
+                            <TableCell sx={{ color: '#94A3B8', fontWeight: 700, width: '40px' }} />
+                            <TableCell sx={{ color: '#94A3B8', fontWeight: 700 }}>
+                              Código do Pedido
+                            </TableCell>
+                            <TableCell sx={{ color: '#94A3B8', fontWeight: 700 }}>
+                              Cliente
+                            </TableCell>
+                            <TableCell sx={{ color: '#94A3B8', fontWeight: 700 }}>
+                              Horário
+                            </TableCell>
+                            <TableCell sx={{ color: '#94A3B8', fontWeight: 700 }}>
+                              Status Atual
+                            </TableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {group.orders.map((order) => (
+                            <Row
+                              key={order._id || order.id}
+                              row={createData(order)}
+                              orders={orders}
+                              setOrders={setOrders}
+                            />
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                  </DesktopTableWrapper>
+
+                  {/* Cards Exclusivos e Otimizados para Celular */}
+                  <MobileOrdersContainer>
+                    {group.orders.map((order) => {
+                      const id = order._id || order.id;
+                      const code = (order.id || order._id || '').slice(-6).toUpperCase();
+                      const isExpanded = Boolean(expandedOrders[id]);
+                      const orderTotal = (order.products || []).reduce(
+                        (sum, p) => sum + (p.price || 0) * (p.quantity || 1),
+                        0,
+                      );
+
+                      return (
+                        <MobileOrderCard key={id}>
+                          <div className="order-card-top">
+                            <span className="order-number">
+                              Pedido <span>#{code}</span>
+                            </span>
+                            <span className="order-time">
+                              <Clock size={14} color="#FF6B00" />
+                              {formatDate(order.createdAt || order.created_at)}
+                            </span>
+                          </div>
+
+                          <div className="order-customer">
+                            <span className="label">Cliente:</span>
+                            <span className="name">
+                              {order.user?.name || order.userName || 'Cliente'}
+                            </span>
+                          </div>
+
+                          <div className="status-wrapper">
+                            <span className="status-label">Status do Pedido:</span>
+                            <SelectStatus
+                              options={orderStatusOptions.filter((s) => s.id !== 0)}
+                              placeholder="Alterar status..."
+                              defaultValue={orderStatusOptions.find(
+                                (s) => s.value === order.status,
+                              )}
+                              onChange={(newOption) =>
+                                handleStatusChange(id, newOption.value)
+                              }
+                              isLoading={updatingOrderId === id}
+                              styles={selectStatusStyles}
+                              menuPortalTarget={document.body}
+                            />
+                          </div>
+
+                          <button
+                            type="button"
+                            className="toggle-items-btn"
+                            onClick={() => toggleOrderItems(id)}
+                          >
+                            <span>
+                              {isExpanded
+                                ? 'Ocultar Produtos'
+                                : `Ver Produtos (${order.products?.length || 0})`}
+                            </span>
+                            <CaretDown
+                              size={14}
+                              className={isExpanded ? 'rotate' : ''}
+                            />
+                          </button>
+
+                          {isExpanded && (
+                            <div className="mobile-items-list">
+                              {(order.products || []).map((p) => (
+                                <div className="item-entry" key={p.id}>
+                                  <img
+                                    src={formatImageUrl(p.url)}
+                                    alt={p.name}
+                                    onError={(e) => {
+                                      e.target.onerror = null;
+                                      e.target.src =
+                                        'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=120&q=80';
+                                    }}
+                                  />
+                                  <div className="item-details">
+                                    <span className="item-name">{p.name}</span>
+                                    <span className="item-sub">
+                                      {p.quantity}x {formatPrice(p.price)}
+                                    </span>
+                                    {p.observation && (
+                                      <span className="item-obs">
+                                        📝 {p.observation}
+                                      </span>
+                                    )}
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+
+                          <div className="order-card-footer">
+                            <span className="footer-label">Total do Pedido:</span>
+                            <span className="total-value">
+                              {formatPrice(orderTotal)}
+                            </span>
+                          </div>
+                        </MobileOrderCard>
+                      );
+                    })}
+                  </MobileOrdersContainer>
+                </>
               )}
             </DayGroup>
           );

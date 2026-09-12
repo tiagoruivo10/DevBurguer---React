@@ -179,4 +179,146 @@ export const DeleteButton = styled.button`
     transform: scale(1.1);
   }
 `;
+export const DesktopTableWrapper = styled.div`
+  width: 100%;
 
+  @media (max-width: 768px) {
+    display: none;
+  }
+`;
+
+export const MobileProductsContainer = styled.div`
+  display: none;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+
+  @media (max-width: 768px) {
+    display: flex;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 36px 16px;
+    color: #94A3B8;
+    background-color: #1E293B;
+    border-radius: 16px;
+    border: 1px dashed #334155;
+    font-size: 14px;
+  }
+`;
+
+export const MobileProductCard = styled.div`
+  background-color: #1E293B;
+  border: 1px solid #334155;
+  border-radius: 16px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+
+  .card-top {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+  }
+
+  .prod-img {
+    width: 68px;
+    height: 68px;
+    object-fit: contain;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.04);
+    padding: 6px;
+    flex-shrink: 0;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .prod-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+    min-width: 0;
+
+    .prod-name {
+      color: #ffffff;
+      font-size: 15px;
+      font-weight: 700;
+      line-height: 1.3;
+      word-break: break-word;
+    }
+
+    .prod-price {
+      color: #FF6B00;
+      font-weight: 800;
+      font-size: 16px;
+    }
+  }
+
+  .card-badge-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+
+    .badge-label {
+      font-size: 12px;
+      color: #94A3B8;
+      font-weight: 600;
+    }
+  }
+
+  .mobile-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 4px;
+  }
+
+  .mobile-edit-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background-color: rgba(255, 107, 0, 0.12);
+    border: 1px solid rgba(255, 107, 0, 0.35);
+    color: #FF8533;
+    padding: 11px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:active {
+      background-color: #FF6B00;
+      color: #ffffff;
+      transform: scale(0.98);
+    }
+  }
+
+  .mobile-delete-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background-color: rgba(239, 68, 68, 0.12);
+    border: 1px solid rgba(239, 68, 68, 0.35);
+    color: #ef4444;
+    padding: 11px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:active {
+      background-color: #ef4444;
+      color: #ffffff;
+      transform: scale(0.98);
+    }
+  }
+`;
