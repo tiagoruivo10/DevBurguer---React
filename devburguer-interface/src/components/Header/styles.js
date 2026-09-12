@@ -268,34 +268,85 @@ export const HamburgerButton = styled.button`
 export const MobileOverlay = styled.div`
   position: fixed;
   inset: 0;
-  top: 68px;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
   background-color: rgba(0, 0, 0, 0.75);
-  backdrop-filter: blur(8px);
-  z-index: 998;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 99998;
   opacity: ${(props) => (props.$isOpen ? 1 : 0)};
   visibility: ${(props) => (props.$isOpen ? 'visible' : 'hidden')};
-  transition: all 0.25s ease-in-out;
+  pointer-events: ${(props) => (props.$isOpen ? 'auto' : 'none')};
+  transition: opacity 0.3s ease, visibility 0.3s ease;
 `;
 
-export const MobileDrawer = styled.div`
+export const MobileDrawer = styled.aside`
   position: fixed;
-  top: 68px;
+  top: 0;
   right: 0;
   bottom: 0;
-  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  width: 85%;
   max-width: 320px;
-  background-color: #0d131f;
-  border-left: 1px solid ${(props) => props.theme.cardBorder || props.theme.darkGray};
-  z-index: 999;
+  background-color: #0b0f17;
+  border-left: 1px solid rgba(255, 107, 0, 0.25);
+  z-index: 99999;
   display: flex;
   flex-direction: column;
-  padding: 20px;
-  gap: 18px;
+  padding: 20px 18px;
+  gap: 16px;
   overflow-y: auto;
-  box-shadow: -8px 0 30px rgba(0, 0, 0, 0.8);
+  -webkit-overflow-scrolling: touch;
+  box-shadow: -10px 0 40px rgba(0, 0, 0, 0.9);
   transform: ${(props) =>
     props.$isOpen ? 'translateX(0)' : 'translateX(100%)'};
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  visibility: ${(props) => (props.$isOpen ? 'visible' : 'hidden')};
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.3s ease;
+`;
+
+export const DrawerHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+
+  .drawer-brand {
+    font-size: 20px;
+    font-weight: 800;
+    color: ${(props) => props.theme.white};
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    span {
+      color: ${(props) => props.theme.orange};
+    }
+  }
+`;
+
+export const DrawerCloseButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #cbd5e1;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover,
+  &:active {
+    background-color: ${(props) => props.theme.orange};
+    border-color: ${(props) => props.theme.orange};
+    color: #ffffff;
+    transform: scale(1.05);
+  }
 `;
 
 export const DrawerProfile = styled.div`
@@ -335,11 +386,40 @@ export const DrawerProfile = styled.div`
     justify-content: space-between;
     width: 100%;
 
-    span {
-      font-size: 14px;
-      font-weight: 700;
-      color: ${(props) => props.theme.white};
+    .prompt-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+
+      span.title {
+        font-size: 14px;
+        font-weight: 700;
+        color: ${(props) => props.theme.white};
+      }
+
+      span.sub {
+        font-size: 11px;
+        color: #94a3b8;
+      }
     }
+  }
+`;
+
+export const DrawerLoginButton = styled(Link)`
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, ${(props) => props.theme.orange} 0%, #ea580c 100%);
+  color: #ffffff;
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.2s ease;
+
+  &:hover {
+    filter: brightness(1.1);
   }
 `;
 
