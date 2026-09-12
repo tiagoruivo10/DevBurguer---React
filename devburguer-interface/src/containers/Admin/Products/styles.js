@@ -30,6 +30,19 @@ export const HeaderContainer = styled.div`
     color: ${(props) => props.theme.lightGray};
     margin-top: 4px;
   }
+
+  @media (max-width: 768px) {
+    margin-bottom: 20px;
+    gap: 12px;
+
+    h2 {
+      font-size: 20px;
+    }
+
+    p {
+      font-size: 13px;
+    }
+  }
 `;
 
 export const NewProductButton = styled.button`
@@ -50,6 +63,12 @@ export const NewProductButton = styled.button`
     transform: translateY(-2px);
     box-shadow: 0 6px 18px rgba(255, 107, 0, 0.5);
   }
+
+  @media (max-width: 768px) {
+    width: 100%;
+    justify-content: center;
+    padding: 12px 16px;
+  }
 `;
 
 export const SearchWrapper = styled.div`
@@ -65,6 +84,10 @@ export const SearchWrapper = styled.div`
     padding: 12px 16px;
     max-width: 400px;
     color: ${(props) => props.theme.orange};
+
+    @media (max-width: 768px) {
+      max-width: 100%;
+    }
 
     &:focus-within {
       border-color: ${(props) => props.theme.orange};

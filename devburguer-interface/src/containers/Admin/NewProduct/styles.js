@@ -30,6 +30,12 @@ export const HeaderContainer = styled.div`
     color: ${(props) => props.theme.lightGray};
     margin-top: 4px;
   }
+
+  @media (max-width: 640px) {
+    h2 {
+      font-size: 20px;
+    }
+  }
 `;
 
 export const BackButton = styled.button`
@@ -60,6 +66,12 @@ export const FormCard = styled.form`
   flex-direction: column;
   gap: 20px;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+
+  @media (max-width: 640px) {
+    padding: 20px 16px;
+    border-radius: 16px;
+    gap: 16px;
+  }
 `;
 
 export const InputGroup = styled.div`

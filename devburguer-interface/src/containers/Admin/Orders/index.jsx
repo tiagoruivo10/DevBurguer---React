@@ -457,7 +457,7 @@ export function Orders() {
                       boxShadow: 'none',
                     }}
                   >
-                    <Table aria-label="tabela de pedidos">
+                    <Table aria-label="tabela de pedidos" sx={{ minWidth: 620 }}>
                       <TableHead sx={{ backgroundColor: '#111827' }}>
                         <TableRow>
                           <TableCell sx={{ color: '#94A3B8', fontWeight: 700, width: '40px' }} />

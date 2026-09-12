@@ -44,6 +44,26 @@ export const HeaderContainer = styled.div`
     font-size: 13px;
     font-weight: 600;
   }
+
+  @media (max-width: 768px) {
+    margin-bottom: 18px;
+    gap: 12px;
+
+    h2 {
+      font-size: 20px;
+    }
+
+    p {
+      font-size: 13px;
+    }
+
+    .total-badge {
+      width: 100%;
+      justify-content: space-between;
+      padding: 8px 14px;
+      font-size: 12px;
+    }
+  }
 `;
 
 export const Filter = styled.div`
@@ -51,6 +71,20 @@ export const Filter = styled.div`
   flex-wrap: wrap;
   gap: 10px;
   margin-bottom: 28px;
+
+  @media (max-width: 768px) {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+    gap: 8px;
+    margin-bottom: 18px;
+    padding-bottom: 6px;
+    width: 100%;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
 `;
 
 export const FilterOptions = styled.button`
@@ -93,6 +127,13 @@ export const FilterOptions = styled.button`
     font-weight: 800;
     padding: 2px 7px;
     border-radius: 10px;
+  }
+
+  @media (max-width: 768px) {
+    white-space: nowrap;
+    flex-shrink: 0;
+    padding: 6px 12px;
+    font-size: 13px;
   }
 `;
 
@@ -180,6 +221,14 @@ export const Toolbar = styled.div`
   border-radius: 16px;
   padding: 14px 20px;
   margin-bottom: 20px;
+
+  @media (max-width: 768px) {
+    padding: 12px 14px;
+    margin-bottom: 16px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
 `;
 
 export const DateFilterGroup = styled.div`
@@ -196,6 +245,18 @@ export const DateFilterGroup = styled.div`
     display: flex;
     align-items: center;
     gap: 6px;
+  }
+
+  @media (max-width: 768px) {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 4px;
+    width: 100%;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
 `;
 
@@ -228,6 +289,13 @@ export const DateButton = styled.button`
     padding: 1px 6px;
     border-radius: 10px;
     font-weight: 800;
+  }
+
+  @media (max-width: 768px) {
+    white-space: nowrap;
+    flex-shrink: 0;
+    padding: 6px 11px;
+    font-size: 12px;
   }
 `;
 
@@ -275,6 +343,11 @@ export const LiveControl = styled.div`
     &:hover {
       border-color: #f59e0b;
     }
+  }
+
+  @media (max-width: 768px) {
+    width: 100%;
+    justify-content: space-between;
   }
 
   @keyframes pulse {
@@ -381,6 +454,34 @@ export const DayGroupHeader = styled.div`
       align-items: center;
       transition: transform 0.2s ease;
       transform: ${(props) => (props.$isOpen ? 'rotate(180deg)' : 'rotate(0deg)')};
+    }
+  }
+
+  @media (max-width: 768px) {
+    padding: 14px 14px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+
+    .left-meta {
+      width: 100%;
+      justify-content: space-between;
+      flex-wrap: wrap;
+
+      .day-title {
+        font-size: 14px;
+      }
+    }
+
+    .right-meta {
+      width: 100%;
+      justify-content: space-between;
+      gap: 8px;
+
+      .stats-pill {
+        font-size: 11px;
+        padding: 4px 8px;
+      }
     }
   }
 `;

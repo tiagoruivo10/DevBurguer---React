@@ -1,6 +1,27 @@
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
+export const Overlay = styled.div`
+  display: none;
+
+  @media (max-width: 960px) {
+    display: block;
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    background-color: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 99998;
+    opacity: ${(props) => (props.$isOpen ? 1 : 0)};
+    visibility: ${(props) => (props.$isOpen ? 'visible' : 'hidden')};
+    pointer-events: ${(props) => (props.$isOpen ? 'auto' : 'none')};
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+  }
+`;
+
 export const Container = styled.aside`
   display: flex;
   flex-direction: column;
@@ -14,6 +35,48 @@ export const Container = styled.aside`
   padding: 24px 16px;
   box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3);
   z-index: 100;
+
+  @media (max-width: 960px) {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 280px;
+    height: 100vh;
+    height: 100dvh;
+    z-index: 99999;
+    box-shadow: 10px 0 35px rgba(0, 0, 0, 0.85);
+    transform: ${(props) =>
+      props.$isOpen ? 'translateX(0)' : 'translateX(-100%)'};
+    visibility: ${(props) => (props.$isOpen ? 'visible' : 'hidden')};
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.3s ease;
+    overflow-y: auto;
+  }
+`;
+
+export const CloseDrawerButton = styled.button`
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #cbd5e1;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover,
+  &:active {
+    background-color: ${(props) => props.theme.orange};
+    border-color: ${(props) => props.theme.orange};
+    color: #ffffff;
+  }
+
+  @media (max-width: 960px) {
+    display: flex;
+  }
 `;
 
 export const AdminHeader = styled(Link)`
@@ -25,6 +88,13 @@ export const AdminHeader = styled(Link)`
   padding: 8px 0;
   width: 100%;
   text-decoration: none;
+
+  .header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
 
   .brand-title {
     font-size: 22px;
