@@ -71,19 +71,13 @@ export const Filter = styled.div`
   flex-wrap: wrap;
   gap: 10px;
   margin-bottom: 28px;
+  width: 100%;
 
   @media (max-width: 768px) {
-    overflow-x: auto;
-    flex-wrap: nowrap;
-    -webkit-overflow-scrolling: touch;
+    display: flex;
+    flex-wrap: wrap;
     gap: 8px;
-    margin-bottom: 18px;
-    padding-bottom: 6px;
-    width: 100%;
-
-    &::-webkit-scrollbar {
-      display: none;
-    }
+    margin-bottom: 20px;
   }
 `;
 
@@ -104,7 +98,7 @@ export const FilterOptions = styled.button`
   padding: 8px 16px;
   font-size: 14px;
   font-weight: 600;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 8px;
   transition: all 0.2s ease;
@@ -130,10 +124,16 @@ export const FilterOptions = styled.button`
   }
 
   @media (max-width: 768px) {
-    white-space: nowrap;
-    flex-shrink: 0;
-    padding: 6px 12px;
-    font-size: 13px;
+    padding: 9px 12px;
+    font-size: 12px;
+    border-radius: 12px;
+    flex: 1 1 calc(50% - 8px);
+    min-width: 135px;
+    justify-content: space-between;
+  }
+
+  @media (max-width: 340px) {
+    flex: 1 1 100%;
   }
 `;
 
@@ -223,11 +223,11 @@ export const Toolbar = styled.div`
   margin-bottom: 20px;
 
   @media (max-width: 768px) {
-    padding: 12px 14px;
+    padding: 14px;
     margin-bottom: 16px;
     flex-direction: column;
     align-items: stretch;
-    gap: 12px;
+    gap: 14px;
   }
 `;
 
@@ -247,15 +247,33 @@ export const DateFilterGroup = styled.div`
     gap: 6px;
   }
 
-  @media (max-width: 768px) {
-    overflow-x: auto;
-    flex-wrap: nowrap;
-    -webkit-overflow-scrolling: touch;
-    padding-bottom: 4px;
-    width: 100%;
+  .date-buttons-grid {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
 
-    &::-webkit-scrollbar {
-      display: none;
+  @media (max-width: 768px) {
+    width: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+
+    .filter-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-right: 0;
+    }
+
+    .date-buttons-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      width: 100%;
     }
   }
 `;
@@ -292,9 +310,10 @@ export const DateButton = styled.button`
   }
 
   @media (max-width: 768px) {
-    white-space: nowrap;
-    flex-shrink: 0;
-    padding: 6px 11px;
+    width: 100%;
+    justify-content: space-between;
+    padding: 9px 12px;
+    border-radius: 12px;
     font-size: 12px;
   }
 `;
@@ -303,6 +322,13 @@ export const LiveControl = styled.div`
   display: flex;
   align-items: center;
   gap: 12px;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    justify-content: space-between;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+  }
 
   .live-pill {
     display: inline-flex;

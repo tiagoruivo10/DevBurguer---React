@@ -352,41 +352,43 @@ export function Orders() {
             Período:
           </span>
 
-          <DateButton
-            type="button"
-            $isActive={dateFilter === 'hoje'}
-            onClick={() => setDateFilter('hoje')}
-          >
-            <span>Hoje</span>
-            <span className="badge">{dateCounts.hoje}</span>
-          </DateButton>
+          <div className="date-buttons-grid">
+            <DateButton
+              type="button"
+              $isActive={dateFilter === 'hoje'}
+              onClick={() => setDateFilter('hoje')}
+            >
+              <span>Hoje</span>
+              <span className="badge">{dateCounts.hoje}</span>
+            </DateButton>
 
-          <DateButton
-            type="button"
-            $isActive={dateFilter === 'ontem'}
-            onClick={() => setDateFilter('ontem')}
-          >
-            <span>Ontem</span>
-            <span className="badge">{dateCounts.ontem}</span>
-          </DateButton>
+            <DateButton
+              type="button"
+              $isActive={dateFilter === 'ontem'}
+              onClick={() => setDateFilter('ontem')}
+            >
+              <span>Ontem</span>
+              <span className="badge">{dateCounts.ontem}</span>
+            </DateButton>
 
-          <DateButton
-            type="button"
-            $isActive={dateFilter === '7dias'}
-            onClick={() => setDateFilter('7dias')}
-          >
-            <span>Últimos 7 dias</span>
-            <span className="badge">{dateCounts.seteDias}</span>
-          </DateButton>
+            <DateButton
+              type="button"
+              $isActive={dateFilter === '7dias'}
+              onClick={() => setDateFilter('7dias')}
+            >
+              <span>Últimos 7 dias</span>
+              <span className="badge">{dateCounts.seteDias}</span>
+            </DateButton>
 
-          <DateButton
-            type="button"
-            $isActive={dateFilter === 'todos'}
-            onClick={() => setDateFilter('todos')}
-          >
-            <span>Todos</span>
-            <span className="badge">{dateCounts.todos}</span>
-          </DateButton>
+            <DateButton
+              type="button"
+              $isActive={dateFilter === 'todos'}
+              onClick={() => setDateFilter('todos')}
+            >
+              <span>Todos</span>
+              <span className="badge">{dateCounts.todos}</span>
+            </DateButton>
+          </div>
         </DateFilterGroup>
 
         <LiveControl $isMuted={isMuted}>
